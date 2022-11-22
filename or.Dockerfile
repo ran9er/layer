@@ -1,25 +1,24 @@
 FROM alpine
 
-RUN apk add --no-cache --virtual .build-deps \
+RUN apk update \
+  ; apk add --no-cache --virtual .build-deps \
         build-base \
         coreutils \
         curl \
-        gd-dev \
-        geoip-dev \
-        libxslt-dev \
+        jq \
         linux-headers \
         make \
         perl-dev \
         readline-dev \
         zlib-dev \
+        openssl-dev \
+        pcre-dev \
   ; apk add --no-cache \
-        gd \
-        geoip \
         libgcc \
-        libxslt \
+        pcre \
         zlib \
   \
-  ; build_dir=/root/build \
+  ; build_dir=/tmp/build \
   ; mkdir -p $build_dir \
   \
   ; cd $build_dir \
@@ -48,15 +47,14 @@ RUN apk add --no-cache --virtual .build-deps \
   ; make \
   ; make install \
   \
-  ; ln -sf /dev/stdout /usr/local/openresty/nginx/logs/access.log \
-  ; ln -sf /dev/stderr /usr/local/openresty/nginx/logs/error.log
+  ; ln -sf /dev/stdout /opt/openresty/nginx/logs/access.log \
+  ; ln -sf /dev/stderr /opt/openresty/nginx/logs/error.log \
   \
   ; cd ../../ && rm -rf $build_dir \
   ; apk del .build-deps \
   #; mkdir -p /var/run/openresty \
-  ; opm install ledgetech/lua-resty-http \
-  ; ln -fs /opt/openresty/nginx/conf /etc/openresty \
-  ; echo 'shopt -s cdable_vars' >> /root/.bashrc
+  #; opm install ledgetech/lua-resty-http \
+  ; ln -fs /opt/openresty/nginx/conf /etc/openresty
 
 COPY config /etc/openresty
 WORKDIR /srv
