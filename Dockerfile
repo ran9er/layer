@@ -11,6 +11,32 @@ ENV NVIM_PRESET=core \
     PYTHONUNBUFFERED=x
 
 RUN set -eux \
+  ; apt update \
+  ; apt-get install -y --no-install-recommends gnupg build-essential \
+  ; mkdir -p /opt/node \
+  ; node_version=$(curl -sSL https://nodejs.org/en/download/ | rg 'Latest LTS Version.*<strong>(.+)</strong>' -or '$1') \
+  ; curl -sSL https://nodejs.org/dist/v${node_version}/node-v${node_version}-linux-x64.tar.xz \
+    | tar Jxf - --strip-components=1 -C /opt/node \
+  \
+  ; mkdir -p /opt/language-server \
+  ; npm install --location=global \
+        quicktype \
+        pyright \
+        vscode-langservers-extracted \
+        yaml-language-server \
+  ; npm cache clean -f \
+  ; tar -C /opt -Jcf $TARGET/node.tar.xz node \
+  \
+  ; lua_ls_url=$(curl -sSL https://api.github.com/repos/sumneko/lua-language-server/releases -H 'Accept: application/vnd.github.v3+json' \
+               | jq -r '[.[]|select(.prerelease == false)][0].assets[].browser_download_url' | grep 'linux-x64') \
+  ; mkdir -p /opt/language-server/sumneko_lua \
+  ; curl -sSL ${lua_ls_url} | tar zxf - \
+      -C /opt/language-server/sumneko_lua \
+  ; tar -C /opt/language-server -Jcf $TARGET/nvim-lua.tar.xz sumneko_lua \
+  \
+  ; apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
+
+RUN set -eux \
   ; mkdir $TARGET \
   \
   ; mkdir -p $NVIM_ROOT \
