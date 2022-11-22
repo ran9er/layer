@@ -1,0 +1,18 @@
+- nushell
+    - config
+- nvim
+    - config
+    - lua
+    - js
+    - python
+    - rust
+    - haskell
+    - vue
+    - go
+- vscode-server
+- nodejs
+- rust
+- haskell
+- go
+- python
+
