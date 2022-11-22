@@ -1,7 +1,5 @@
 #!/bin/sh
 
-echo hello
-
-echo ${HOST}
-
+echo fetch ${HOST}/setup.sh
+echo host:${HOST}
 

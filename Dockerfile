@@ -1,1 +1,1 @@
-FROM fj0rd/layer:openresty
+FROM fj0rd/0x:or
