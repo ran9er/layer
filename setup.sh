@@ -4,7 +4,8 @@ HOST=${HTTP_HOST}
 
 
 fetch () {
-    curl -sSL ${HOST}/$1 | xz -d -T0 | tar xf - -C $2 --strip-components=1
+    mkdir -p $2
+    curl -sSL ${HOST}/$1 | xz -d -T0 | tar -xf - -C $2 --strip-components=1
 }
 
 setup_nushell () {
@@ -14,8 +15,8 @@ setup_nushell () {
 
 setup_nvim() {
     fetch nvim.tar.xz /usr/local
-    fetch nvim.config.tar.xz ${HOME}/.config/nvim
+    fetch nvim.conf.tar.xz ${HOME}/.config/nvim
 }
 
 
-setup_nvim()
+setup_nvim
