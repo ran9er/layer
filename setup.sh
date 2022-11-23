@@ -81,12 +81,37 @@ setup_lslua() {
     echo --- done
 }
 
+setup_s() {
+    setup_nushell
+    setup_utils
+}
+
+setup_n() {
+    setup_nvim
+    setup_node
+}
+
+setup_py() {
+    setup_s
+    setup_n
+    setup_python
+}
+
+setup_php() {
+    setup_s
+    setup_n
+    setup_lsphp
+}
+
 if [ -z "$@"]; then
     echo 'curl ${HTTP_HOST}/setup.sh | sh -s <...>'
-    echo '# nushell utils'
+    echo '#py: s n python'
+    echo '#php: s n lsphp'
+    echo '#s: nushell utils'
+    echo '#n: nvim node'
     echo '# openresty'
     echo '# ssh'
-    echo '# nvim node python lsnode lslua lsphp'
+    echo '# python lsnode lslua lsphp'
 else
     for i in "$@"; do
         eval "setup_$i"
