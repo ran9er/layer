@@ -15,7 +15,7 @@ evx () {
 
 setup_nushell () {
     echo --- setup nushell
-    fetch nushell /usr/local
+    fetch nushell /usr/local/bin
     fetch nushell.conf ${HOME}/.config/nushell
     echo --- done
 }
@@ -30,12 +30,13 @@ setup_nvim() {
 setup_openresty() {
     echo --- setup openresty
     fetch openresty /opt/openresty
+    mkdir -p /var/log/openresty
     echo --- done
 }
 
 setup_node() {
     echo --- setup node, lspy, lsyaml, lsjson
-    let tg=${NODE_ROOT:-/opt/node}
+    local tg=${NODE_ROOT:-/opt/node}
     fetch node $tg
     evx "PATH=$tg/bin:\$PATH"
     echo --- done
