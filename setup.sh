@@ -8,6 +8,11 @@ fetch () {
     curl -sSL ${HOST}/$1.tar.zst | zstd -d -T0 | tar -xf - -C $2 --strip-components=1
 }
 
+evx () {
+    echo "export $@\n" | tee -a ${HOME}/.profile
+    eval "export $@"
+}
+
 setup_nushell () {
     echo --- setup nushell
     fetch nushell /usr/local
@@ -30,13 +35,18 @@ setup_openresty() {
 
 setup_node() {
     echo --- setup node, lspy, lsyaml, lsjson
-    fetch node /usr/local
+    let tg=${NODE_ROOT:-/opt/node}
+    fetch node $tg
+    evx "PATH=$tg/bin:\$PATH"
     echo --- done
 }
 
 setup_python() {
     echo --- setup python
-    fetch python /opt/python
+    local tg=${PYTHON_ROOT:-/opt/python}
+    fetch python $tg
+    evx "PATH=$tg/bin:\$PATH"
+    evx "LD_LIBRARY_PATH=$tg/lib:\$LD_LIBRARY_PATH"
     echo --- done
 }
 

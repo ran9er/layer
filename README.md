@@ -18,9 +18,9 @@
     - [ ] vscode-server
     - [x] sshd
     - [x] node
-    - [ ] rust
-    - [ ] haskell
-    - [ ] go
+    - [-] rust
+    - [-] haskell
+    - [-] go
     - [x] python
 
 ### size
