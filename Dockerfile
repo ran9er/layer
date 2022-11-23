@@ -27,9 +27,8 @@ RUN set -eux \
   ; mkdir -p $NODE_ROOT \
   ; mkdir -p $UTILS_ROOT \
   ; mkdir -p $LS_ROOT \
-  ; mkdir -P $NU_ROOT \
-  ; mkdir -P $SSHD_ROOT \
-  \
+  ; mkdir -p $NU_ROOT \
+  ; mkdir -p $SSHD_ROOT \
   ;
 
 # node
@@ -144,6 +143,7 @@ RUN set -eux \
 COPY --from=dropbear / $SSHD_ROOT
 RUN set -eux \
   ; tar -C $(dirname $SSHD_ROOT) -cf - $(basename $SSHD_ROOT) | zstd -T0 -19 > $TARGET/sshd.tar.zst \
+  ;
 
 FROM fj0rd/0x:latest as openresty
 RUN set -eux \
