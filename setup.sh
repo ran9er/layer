@@ -12,22 +12,44 @@ setup_nushell () {
     echo --- setup nushell
     fetch nushell /usr/local
     fetch nushell.conf ${HOME}/.config/nushell
+    echo --- done
 }
 
 setup_nvim() {
     echo --- setup nvim
     fetch nvim /usr/local
     fetch nvim.conf ${HOME}/.config/nvim
+    echo --- done
 }
 
 setup_openresty() {
     echo --- setup openresty
     fetch openresty /opt/openresty
+    echo --- done
 }
 
 setup_node() {
-    echo --- setup node
+    echo --- setup node, lspy, lsyaml, lsjson
     fetch node /usr/local
+    echo --- done
+}
+
+setup_lsphp() {
+    echo --- setup lsphp
+    fetch lsphp /opt/language-server/vscode-php-debug
+    echo --- done
+}
+
+setup_lsnode() {
+    echo --- setup lsnode
+    fetch lsnode /opt/language-server/vscode-node-debug2
+    echo --- done
+}
+
+setup_lslua() {
+    echo --- setup lslua
+    fetch lslua /opt/language-server/sumneko_lua
+    echo --- done
 }
 
 for i in "$@"; do

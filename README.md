@@ -1,23 +1,27 @@
-- zstd
-- openresty
+- [x] zstd
+- [x] openresty
 - dev
-    - nushell
-        - config
-    - nvim
-        - config
-        - lua
-        - js
-        - python
-        - rust
-        - haskell
-        - vue
-        - go
-    - vscode-server
-    - nodejs
-    - rust
-    - haskell
-    - go
-    - python
+    - [x] nushell
+        - [x] config
+    - [x] nvim
+        - [x] config
+    - [x] language server
+        - [x] lua
+        - [x] node
+        - [x] python
+        - [-] rust
+        - [-] haskell
+        - [-] vue
+        - [-] go
+        - [x] php
+        - [x] yaml,json
+    - [ ] vscode-server
+    - [x] node
+    - [ ] rust
+    - [ ] haskell
+    - [ ] go
+    - [ ] python
+    - [ ] yaml, json
 
 ### size
 4524    nvim.conf.tar.xz
