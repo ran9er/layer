@@ -40,6 +40,18 @@ setup_python() {
     echo --- done
 }
 
+setup_utils() {
+    echo --- setup utils
+    fetch utils /usr/local/bin
+    echo --- done
+}
+
+setup_ssh() {
+    echo --- setup sshd
+    fetch sshd /
+    echo --- done
+}
+
 setup_lsphp() {
     echo --- setup lsphp
     fetch lsphp /opt/language-server/vscode-php-debug

@@ -16,6 +16,7 @@
         - [x] php
         - [x] yaml,json
     - [ ] vscode-server
+    - [x] sshd
     - [x] node
     - [ ] rust
     - [ ] haskell
