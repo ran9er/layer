@@ -34,6 +34,12 @@ setup_node() {
     echo --- done
 }
 
+setup_python() {
+    echo --- setup python
+    fetch python /opt/python
+    echo --- done
+}
+
 setup_lsphp() {
     echo --- setup lsphp
     fetch lsphp /opt/language-server/vscode-php-debug

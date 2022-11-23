@@ -90,7 +90,11 @@ RUN set -eux \
   ; tar -C ${HOME}/.config -cf - nushell | zstd -T0 -19 > $TARGET/nushell.conf.tar.zst \
   ;
 
+
+FROM fj0rd/scratch:py as python
+
 FROM fj0rd/0x:or
 COPY --from=build /target /srv
 COPY --from=openresty /target /srv
+COPY --from=python /python.tar.zst /srv
 COPY setup.sh /srv

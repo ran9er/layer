@@ -20,8 +20,7 @@
     - [ ] rust
     - [ ] haskell
     - [ ] go
-    - [ ] python
-    - [ ] yaml, json
+    - [x] python
 
 ### size
 4524    nvim.conf.tar.xz
