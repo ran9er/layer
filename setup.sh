@@ -81,6 +81,14 @@ setup_lslua() {
     echo --- done
 }
 
-for i in "$@"; do
-    eval "setup_$i"
-done
+if [ -z "$@"]; then
+    echo 'curl ${HTTP_HOST}/setup.sh | sh -s <...>'
+    echo '# nushell utils'
+    echo '# openresty'
+    echo '# ssh'
+    echo '# nvim node python lsnode lslua lsphp'
+else
+    for i in "$@"; do
+        eval "setup_$i"
+    done
+fi
