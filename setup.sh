@@ -84,23 +84,27 @@ setup_lslua() {
 setup_s() {
     setup_nushell
     setup_utils
+    nu
 }
 
 setup_n() {
     setup_nvim
     setup_node
+    nvim
 }
 
 setup_py() {
     setup_s
     setup_n
     setup_python
+    nvim
 }
 
 setup_php() {
     setup_s
     setup_n
     setup_lsphp
+    nvim
 }
 
 if [ -z "$@"]; then
