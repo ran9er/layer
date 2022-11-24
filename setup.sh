@@ -57,7 +57,7 @@ setup_python() {
     echo --- done
 }
 
-setup_python-alpine() {
+setup_python_alpine() {
     echo --- setup python
     local tg=${PYTHON_ROOT:-/opt/python}
     fetch python-alpine $tg
@@ -115,10 +115,8 @@ setup_py() {
     nvim
 }
 
-setup_pya() {
-    setup_s
-    fetch nvim.conf ${HOME}/.config/nvim
-    setup_python-alpine
+setup_pyr() {
+    setup_python_alpine
 }
 
 setup_php() {
