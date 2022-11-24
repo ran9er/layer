@@ -57,6 +57,15 @@ setup_python() {
     echo --- done
 }
 
+setup_python-alpine() {
+    echo --- setup python
+    local tg=${PYTHON_ROOT:-/opt/python}
+    fetch python-alpine $tg
+    evx "PATH=$tg/bin:\$PATH"
+    evx "LD_LIBRARY_PATH=$tg/lib:\$LD_LIBRARY_PATH"
+    echo --- done
+}
+
 setup_utils() {
     echo --- setup utils
     fetch utils /usr/local/bin
@@ -104,6 +113,12 @@ setup_py() {
     setup_n
     setup_python
     nvim
+}
+
+setup_pya() {
+    setup_s
+    fetch nvim.conf ${HOME}/.config/nvim
+    setup_python-alpine
 }
 
 setup_php() {
