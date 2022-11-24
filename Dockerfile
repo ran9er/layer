@@ -10,6 +10,7 @@ ENV NU_ROOT=/opt/nushell
 ENV UTILS_ROOT=/opt/utils
 ENV LS_ROOT=/opt/language-server
 ENV SSHD_ROOT=/opt/dropbear
+ENV WASM_ROOT=/opt/wasmtime
 ENV PATH=${NODE_ROOT}/bin:${NVIM_ROOT}/bin:$PATH
 
 ENV XDG_CONFIG_HOME=/opt/config
@@ -29,6 +30,16 @@ RUN set -eux \
   ; mkdir -p $LS_ROOT \
   ; mkdir -p $NU_ROOT \
   ; mkdir -p $SSHD_ROOT \
+  ; mkdir -p $WASM_ROOT \
+  ;
+
+# wasmtime
+RUN set -eux \
+  ; wasmtime_url=$(curl -sSL https://api.github.com/repos/bytecodealliance/wasmtime/releases -H 'Accept: application/vnd.github.v3+json' \
+    | jq -r '[.[]|select(.prerelease == false)][0].assets[].browser_download_url' | grep x86_64-linux | grep -v api) \
+  ; curl -sSL ${wasmtime_url} | tar Jxf - --strip-components=1 -C $WASM_ROOT --wildcards '*/wasmtime' \
+  ; find $WASM_ROOT -type f -exec grep -IL . "{}" \; | xargs -L 1 strip \
+  ; tar -C $(dirname $WASM_ROOT) -cf - $(basename $WASM_ROOT) | zstd -T0 -19 > $TARGET/wasmtime.tar.zst \
   ;
 
 # node

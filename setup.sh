@@ -27,6 +27,12 @@ setup_nvim() {
     echo --- done
 }
 
+setup_wasm() {
+    echo --- setup wasm
+    fetch wasmtime /usr/local/bin
+    echo --- done
+}
+
 setup_openresty() {
     echo --- setup openresty
     fetch openresty /opt/openresty
