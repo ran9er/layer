@@ -162,11 +162,9 @@ RUN set -eux \
   ; tar -C /opt -cf - openresty | zstd -T0 -19 > /target/openresty.tar.zst
 
 FROM fj0rd/scratch:py as python
-FROM fj0rd/scratch:pya as pythona
 
 FROM fj0rd/0x:or
 COPY --from=build /target /srv
 COPY --from=openresty /target /srv
 COPY --from=python /python.tar.zst /srv
-COPY --from=pythona /python-alpine.tar.zst /srv
 COPY setup.sh /srv
