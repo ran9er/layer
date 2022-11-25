@@ -54,7 +54,7 @@ jobs:
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Build layers
+      - name: Build test
         uses: docker/build-push-action@v2
         with:
           file: test.Dockerfile
