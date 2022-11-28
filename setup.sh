@@ -87,6 +87,12 @@ setup_lslua() {
     echo --- done
 }
 
+setup_vs() {
+    echo --- setup vscode-server
+    fetch vscode-server ${HOME}
+    echo --- done
+}
+
 setup_s() {
     setup_nushell
     setup_utils
