@@ -120,7 +120,7 @@ setup_php() {
     nvim
 }
 
-if [ -z "$@"]; then
+if [ -z "$@" ]; then
     echo 'curl ${HTTP_HOST}/setup.sh | sh -s <...>'
     echo '#py: s n python'
     echo '#php: s n lsphp'
