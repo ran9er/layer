@@ -1,7 +1,7 @@
 FROM fj0rd/scratch:dropbear as dropbear
 FROM fj0rd/scratch:nu as nu
 
-FROM fj0rd/io:base as build
+FROM ubuntu as build
 
 ENV TARGET=/target
 ENV NODE_ROOT=/opt/node
@@ -22,7 +22,12 @@ ENV NVIM_PRESET=core \
 # base
 RUN set -eux \
   ; apt update \
-  ; apt-get install -y --no-install-recommends gnupg build-essential \
+  ; apt-get install -y --no-install-recommends \
+        curl gnupg ca-certificates \
+        zstd xz-utils unzip \
+        jq ripgrep git build-essential \
+  ; apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* \
+  \
   ; mkdir -p ${TARGET} \
   ; mkdir -p $NVIM_ROOT \
   ; mkdir -p $NODE_ROOT \
