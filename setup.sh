@@ -89,7 +89,8 @@ setup_lslua() {
 
 setup_vs() {
     echo --- setup vscode-server
-    fetch vscode-server ${HOME}
+    mkdir -p ${HOME}/.vscode-server
+    fetch vscode-server ${HOME}/.vscode-server
     echo --- done
 }
 
