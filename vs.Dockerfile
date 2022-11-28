@@ -1,6 +1,7 @@
 FROM fj0rd/io:base as build
-ENV commit_id='6261075646f055b99068d3688932416f2346dd3b'
 RUN set -eux \
+  ; commit_id=$(curl -sSL https://github.com/microsoft/vscode/tags \
+    | r '<a.*href="/microsoft/vscode/commit/(.+)">' -or '$1' | head -n 1) \
   ; mkdir -p /target /tmp/.vscode-server/bin/${commit_id} \
   ; curl -sSL "https://update.code.visualstudio.com/commit:${commit_id}/server-linux-x64/stable" \
     | tar -zxf - -C /tmp/.vscode-server/bin/${commit_id} --strip-components=1 \

@@ -160,21 +160,44 @@ RUN set -eux \
   ; tar -C $(dirname $UTILS_ROOT) -cf - $(basename $UTILS_ROOT) | zstd -T0 -19 > $TARGET/utils.tar.zst \
   ;
 
+# python
+ARG PYTHON_VERSION=3.10
+RUN set -eux \
+  ; mkdir -p /tmp/python \
+  ; py_url=$(curl -sSL https://api.github.com/repos/indygreg/python-build-standalone/releases -H 'Accept: application/vnd.github.v3+json' \
+          | jq -r '[.[]|select(.prerelease == false)][0].assets[].browser_download_url' \
+          | grep -v sha256 \
+          | grep ${PYTHON_VERSION} \
+          | grep x86_64-unknown-linux-musl-install_only) \
+  ; curl -sSL ${py_url} | tar zxf - -C /tmp/python --strip-components=1 \
+  ; tar -C /tmp -cf - python | zstd -T0 -19 > /target/python.tar.zst
+
 # sshd
 COPY --from=dropbear / $SSHD_ROOT
 RUN set -eux \
   ; tar -C $(dirname $SSHD_ROOT) -cf - $(basename $SSHD_ROOT) | zstd -T0 -19 > $TARGET/sshd.tar.zst \
   ;
 
+# vscode-server
+RUN set -eux \
+  ; commit_id=$(curl -sSL https://github.com/microsoft/vscode/tags \
+    | r '<a.*href="/microsoft/vscode/commit/(.+)">' -or '$1' | head -n 1) \
+  ; mkdir -p /target /tmp/.vscode-server/bin/${commit_id} \
+  ; curl -sSL "https://update.code.visualstudio.com/commit:${commit_id}/server-linux-x64/stable" \
+    | tar -zxf - -C /tmp/.vscode-server/bin/${commit_id} --strip-components=1 \
+  ; tar -C /tmp -cf - .vscode-server | zstd -T0 -19 > /target/vscode-server.tar.zst \
+  ;
+
+
+#------
 FROM fj0rd/0x:latest as openresty
 RUN set -eux \
   ; mkdir -p /target \
   ; tar -C /opt -cf - openresty | zstd -T0 -19 > /target/openresty.tar.zst
 
-FROM fj0rd/scratch:py as python
-
+#FROM fj0rd/scratch:py as python
 FROM fj0rd/0x:or
+#COPY --from=python /python.tar.zst /srv
 COPY --from=build /target /srv
 COPY --from=openresty /target /srv
-COPY --from=python /python.tar.zst /srv
 COPY setup.sh /srv
