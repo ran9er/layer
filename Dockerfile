@@ -167,8 +167,9 @@ RUN set -eux \
   ; py_url=$(curl -sSL https://api.github.com/repos/indygreg/python-build-standalone/releases -H 'Accept: application/vnd.github.v3+json' \
           | jq -r '[.[]|select(.prerelease == false)][0].assets[].browser_download_url' \
           | grep -v sha256 \
+          | grep x86_64-unknown-linux-musl-install_only \
           | grep ${PYTHON_VERSION} \
-          | grep x86_64-unknown-linux-musl-install_only) \
+          )\
   ; curl -sSL ${py_url} | tar zxf - -C /tmp/python --strip-components=1 \
   ; tar -C /tmp -cf - python | zstd -T0 -19 > /target/python.tar.zst
 
