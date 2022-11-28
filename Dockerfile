@@ -1,5 +1,5 @@
 FROM fj0rd/scratch:dropbear as dropbear
-FROM fj0rd/scratch:nu as nu
+FROM fj0rd/scratch:dog as dog
 
 FROM ubuntu as build
 
@@ -126,7 +126,7 @@ RUN set -eux \
   ;
 
 # utils
-COPY --from=nu /usr/local/bin/dog $UTILS_ROOT/dog
+COPY --from=dog /usr/local/bin/dog $UTILS_ROOT/dog
 RUN set -eux \
   ; rg_url=$(curl -sSL https://api.github.com/repos/BurntSushi/ripgrep/releases -H 'Accept: application/vnd.github.v3+json' \
           | jq -r '[.[]|select(.prerelease == false)][0].assets[].browser_download_url' | grep x86_64-unknown-linux-musl) \
