@@ -11,6 +11,8 @@ ENV UTILS_ROOT=/opt/utils
 ENV LS_ROOT=/opt/language-server
 ENV SSHD_ROOT=/opt/dropbear
 ENV WASM_ROOT=/opt/wasmtime
+ENV PYTHON_ROOT=/opt/python
+ENV VSCODE_ROOT=/opt/vscode
 ENV PATH=${NODE_ROOT}/bin:${NVIM_ROOT}/bin:$PATH
 
 ENV XDG_CONFIG_HOME=/opt/config
@@ -36,6 +38,8 @@ RUN set -eux \
   ; mkdir -p $NU_ROOT \
   ; mkdir -p $SSHD_ROOT \
   ; mkdir -p $WASM_ROOT \
+  ; mkdir -p $PYTHON_ROOT \
+  ; mkdir -p $VSCODE_ROOT \
   ;
 
 # wasmtime
@@ -163,15 +167,14 @@ RUN set -eux \
 # python
 ARG PYTHON_VERSION=3.10
 RUN set -eux \
-  ; mkdir -p /tmp/python \
   ; py_url=$(curl -sSL https://api.github.com/repos/indygreg/python-build-standalone/releases -H 'Accept: application/vnd.github.v3+json' \
           | jq -r '[.[]|select(.prerelease == false)][0].assets[].browser_download_url' \
           | grep -v sha256 \
           | grep x86_64-unknown-linux-musl-install_only \
           | grep ${PYTHON_VERSION} \
           )\
-  ; curl -sSL ${py_url} | tar zxf - -C /tmp/python --strip-components=1 \
-  ; tar -C /tmp -cf - python | zstd -T0 -19 > /target/python.tar.zst
+  ; curl -sSL ${py_url} | tar zxf - -C ${PYTHON_ROOT} --strip-components=1 \
+  ; tar -C $(dirname $PYTHON_ROOT) -cf - $(basename $PYTHON_ROOT) | zstd -T0 -19 > $TARGET/python.tar.zst
 
 # sshd
 COPY --from=dropbear / $SSHD_ROOT
@@ -182,11 +185,11 @@ RUN set -eux \
 # vscode-server
 RUN set -eux \
   ; commit_id=$(curl -sSL https://github.com/microsoft/vscode/tags \
-    | r '<a.*href="/microsoft/vscode/commit/(.+)">' -or '$1' | head -n 1) \
-  ; mkdir -p /target /tmp/.vscode-server/bin/${commit_id} \
+    | rg '<a.*href="/microsoft/vscode/commit/(.+)">' -or '$1' | head -n 1) \
+  ; mkdir -p $VSCODE_ROOT/.vscode-server/bin/${commit_id} \
   ; curl -sSL "https://update.code.visualstudio.com/commit:${commit_id}/server-linux-x64/stable" \
-    | tar -zxf - -C /tmp/.vscode-server/bin/${commit_id} --strip-components=1 \
-  ; tar -C /tmp -cf - .vscode-server | zstd -T0 -19 > /target/vscode-server.tar.zst \
+    | tar -zxf - -C $VSCODE_ROOT/.vscode-server/bin/${commit_id} --strip-components=1 \
+  ; tar -C $VSCODE_ROOT -cf - .vscode-server | zstd -T0 -19 > $TARGET/vscode-server.tar.zst \
   ;
 
 
