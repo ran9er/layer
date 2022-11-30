@@ -16,14 +16,14 @@ evx () {
 setup_nushell () {
     echo --- setup nushell
     fetch nushell /usr/local/bin
-    fetch nushell.conf ${HOME}/.config/nushell
+    fetch nushell.conf ${XDG_CONFIG_HOME:-$HOME/.config}/nushell
     echo --- done
 }
 
 setup_nvim() {
     echo --- setup nvim
     fetch nvim /usr/local
-    fetch nvim.conf ${HOME}/.config/nvim
+    fetch nvim.conf ${XDG_CONFIG_HOME:-$HOME/.config}/nvim
     echo --- done
 }
 
