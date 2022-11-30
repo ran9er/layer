@@ -71,7 +71,8 @@ setup_ssh() {
 
 setup_lsphp() {
     echo --- setup lsphp
-    fetch lsphp /opt/language-server/vscode-php-debug
+    fetch lsphp /opt/language-server/phan
+    fetch phpdb /opt/language-server/vscode-php-debug
     echo --- done
 }
 
@@ -103,21 +104,17 @@ setup_s() {
 setup_n() {
     setup_nvim
     setup_node
-    nvim
 }
 
 setup_py() {
     setup_s
     setup_n
     setup_python
-    nvim
 }
 
 setup_php() {
-    setup_s
     setup_n
     setup_lsphp
-    nvim
 }
 
 if [ -z "$@" ]; then

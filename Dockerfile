@@ -74,19 +74,24 @@ RUN set -eux \
       -C $LS_ROOT/sumneko_lua \
   ; tar -C $LS_ROOT -cf - sumneko_lua | zstd -T0 -19 > $TARGET/lslua.tar.zst \
   \
-  ; apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* \
-  \
   # lsnode
   ; git clone --depth=1 https://github.com/microsoft/vscode-node-debug2.git $LS_ROOT/vscode-node-debug2 \
   ; cd $LS_ROOT/vscode-node-debug2 \
   ; npm install \
   ; NODE_OPTIONS=--no-experimental-fetch npm run build \
   ; tar -C $LS_ROOT -cf - vscode-node-debug2 | zstd -T0 -19 > $TARGET/lsnode.tar.zst \
-  # lsphp
+  ;
+
+# php
+RUN set -eux \
+  ; mkdir -p $LS_ROOT/phan \
+  ; curl -sSL https://github.com/phan/phan/releases/latest/download/phan.phar -o $LS_ROOT/phan/phan.phar \
+  ; tar -C $LS_ROOT -cf - phan | zstd -T0 -19 > $TARGET/lsphp.tar.zst \
+  \
   ; git clone --depth=1 https://github.com/xdebug/vscode-php-debug.git $LS_ROOT/vscode-php-debug \
   ; cd $LS_ROOT/vscode-php-debug \
   ; npm install && npm run build \
-  ; tar -C $LS_ROOT -cf - vscode-php-debug | zstd -T0 -19 > $TARGET/lsphp.tar.zst \
+  ; tar -C $LS_ROOT -cf - vscode-php-debug | zstd -T0 -19 > $TARGET/phpdb.tar.zst \
   ;
 
 # nvim
