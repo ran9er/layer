@@ -1,6 +1,17 @@
 FROM fj0rd/scratch:dropbear as dropbear
 FROM fj0rd/scratch:dog as dog
 
+FROM fj0rd/0x:php8 as php
+RUN set -eux \
+  ; mkdir -p /opt/language-server/phpactor \
+  ; phpactor_ver=$(curl -sSL https://api.github.com/repos/phpactor/phpactor/releases -H 'Accept: application/vnd.github.v3+json' | jq -r '[.[]|select(.prerelease == false)][0].tag_name') \
+  ; curl -sSL https://github.com/phpactor/phpactor/archive/refs/tags/${phpactor_ver}.tar.gz \
+      | tar zxf - -C /opt/language-server/phpactor --strip-components=1 \
+  ; cd /opt/language-server/phpactor \
+  ; COMPOSER_ALLOW_SUPERUSER=1 composer install \
+  ; tar -C /opt/language-server -cf - phpactor | zstd -T0 -19 > /opt/lsphp.tar.zst \
+  ;
+
 FROM ubuntu as build
 
 ENV TARGET=/target
@@ -83,11 +94,8 @@ RUN set -eux \
   ;
 
 # php
+COPY --from=php /opt/lsphp.tar.zst $TARGET
 RUN set -eux \
-  ; mkdir -p $LS_ROOT/phan \
-  ; curl -sSL https://github.com/phan/phan/releases/latest/download/phan.phar -o $LS_ROOT/phan/phan.phar \
-  ; tar -C $LS_ROOT -cf - phan | zstd -T0 -19 > $TARGET/lsphp.tar.zst \
-  \
   ; git clone --depth=1 https://github.com/xdebug/vscode-php-debug.git $LS_ROOT/vscode-php-debug \
   ; cd $LS_ROOT/vscode-php-debug \
   ; npm install && npm run build \

@@ -71,7 +71,7 @@ setup_ssh() {
 
 setup_lsphp() {
     echo --- setup lsphp
-    fetch lsphp /opt/language-server/phan
+    fetch lsphp /opt/language-server/phpactor
     fetch phpdb /opt/language-server/vscode-php-debug
     echo --- done
 }
