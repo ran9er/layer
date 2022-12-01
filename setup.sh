@@ -112,7 +112,6 @@ setup_vs() {
 setup_s() {
     setup_nushell
     setup_utils
-    nu
 }
 
 setup_n() {
@@ -121,7 +120,6 @@ setup_n() {
 }
 
 setup_py() {
-    setup_s
     setup_n
     setup_python
 }
@@ -166,13 +164,15 @@ function china_mirrors {
 
 if [ -z "$@" ]; then
     echo 'curl ${HTTP_HOST}/setup.sh | sh -s <...>'
-    echo '#py: s n python'
-    echo '#php: s n lsphp'
+    echo '#py:  n python'
+    echo '#php: n lsphp'
     echo '#s: nushell utils'
     echo '#n: nvim node'
-    echo '# openresty'
-    echo '# ssh'
-    echo '# python lsnode lslua lsphp'
+    echo '# openresty ssh nvim nushell vs'
+    echo '# wasm python node'
+    echo '# lsnode lslua lsphp'
+    echo '# nvim_reconf nushell_reconf'
+    echo '# china mirror'
 elif [[ "$@" =~ ^(mirror|china)$ ]]; then
     echo 'china mirrors for debian|ubuntu|alpine'
     china_mirrors
