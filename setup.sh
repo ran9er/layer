@@ -20,9 +20,23 @@ setup_nushell () {
     echo --- done
 }
 
+setup_nushell_reconf() {
+    echo -- upgrade nushell conf
+    rm -rf ${XDG_CONFIG_HOME:-$HOME/.config}/nushell
+    fetch nushell.conf ${XDG_CONFIG_HOME:-$HOME/.config}/nushell
+    echo --- done
+}
+
 setup_nvim() {
     echo --- setup nvim
     fetch nvim /usr/local
+    fetch nvim.conf ${XDG_CONFIG_HOME:-$HOME/.config}/nvim
+    echo --- done
+}
+
+setup_nvim_reconf() {
+    echo -- upgrade nvim conf
+    rm -rf ${XDG_CONFIG_HOME:-$HOME/.config}/nvim
     fetch nvim.conf ${XDG_CONFIG_HOME:-$HOME/.config}/nvim
     echo --- done
 }
