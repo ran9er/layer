@@ -117,6 +117,39 @@ setup_php() {
     setup_lsphp
 }
 
+function china_mirrors {
+    local b_u="cp /etc/apt/sources.list /etc/apt/sources.list.\$(date +%y%m%d%H%M%S)"
+    local b_a="cp /etc/apk/repositories /etc/apk/repositories.\$(date +%y%m%d%H%M%S)"
+    local s_u="sed -i 's/\(archive\|security\).ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list"
+    local s_d="sed -i 's/\(.*\)\(security\|deb\).debian.org\(.*\)main/\1mirrors.ustc.edu.cn\3main contrib non-free/g' /etc/apt/sources.list"
+    local s_a="sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories"
+    local s=$([ 0 -lt $UID ] && echo sudo)
+    local cmd
+    local os
+    if [ -n "$1" ]; then
+        cmd="echo"
+        os="$1"
+    else
+        cmd="$s"
+        os=$(grep ^ID= /etc/os-release | sed 's/ID=\(.*\)/\1/')
+    fi
+    case $os in
+        ubuntu )
+            eval "$cmd $b_u"
+            eval "$cmd $s_u"
+            ;;
+        debian )
+            eval "$cmd $b_u"
+            eval "$cmd $s_d"
+            ;;
+        alpine )
+            eval "$cmd $b_a"
+            eval "$cmd $s_a"
+            ;;
+        * )
+    esac
+}
+
 if [ -z "$@" ]; then
     echo 'curl ${HTTP_HOST}/setup.sh | sh -s <...>'
     echo '#py: s n python'
@@ -126,6 +159,9 @@ if [ -z "$@" ]; then
     echo '# openresty'
     echo '# ssh'
     echo '# python lsnode lslua lsphp'
+elif [[ "$@" =~ ^(mirror|china)$ ]]; then
+    echo 'china mirrors for debian|ubuntu|alpine'
+    china_mirrors
 else
     for i in "$@"; do
         eval "setup_$i"
