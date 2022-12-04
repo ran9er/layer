@@ -4,7 +4,7 @@ FROM fj0rd/scratch:dog as dog
 FROM fj0rd/0x:php8 as php
 RUN set -eux \
   ; mkdir -p /opt/language-server/phpactor \
-  ; phpactor_ver=$(curl -sSL https://api.github.com/repos/phpactor/phpactor/releases -H 'Accept: application/vnd.github.v3+json' | jq -r '[.[]|select(.prerelease == false)][0].tag_name') \
+  ; phpactor_ver=$(curl -sSL https://api.github.com/repos/phpactor/phpactor/releases/latest | jq -r '.tag_name') \
   ; curl -sSL https://github.com/phpactor/phpactor/archive/refs/tags/${phpactor_ver}.tar.gz \
       | tar zxf - -C /opt/language-server/phpactor --strip-components=1 \
   ; cd /opt/language-server/phpactor \
@@ -55,7 +55,7 @@ RUN set -eux \
 
 # wasmtime
 RUN set -eux \
-  ; wasmtime_ver=$(curl -sSL https://api.github.com/repos/bytecodealliance/wasmtime/releases -H 'Accept: application/vnd.github.v3+json' | jq -r '[.[]|select(.prerelease == false)][0].tag_name') \
+  ; wasmtime_ver=$(curl -sSL https://api.github.com/repos/bytecodealliance/wasmtime/releases/latest | jq -r '.tag_name') \
   ; wasmtime_url="https://github.com/bytecodealliance/wasmtime/releases/latest/download/wasmtime-${wasmtime_ver}-x86_64-linux.tar.xz" \
   ; curl -sSL ${wasmtime_url} | tar Jxf - --strip-components=1 -C $WASM_ROOT --wildcards '*/wasmtime' \
   ; find $WASM_ROOT -type f -exec grep -IL . "{}" \; | xargs -L 1 strip \
@@ -78,7 +78,7 @@ RUN set -eux \
   ; tar -C $(dirname $NODE_ROOT) -cf - $(basename $NODE_ROOT)| zstd -T0 -19 > $TARGET/node.tar.zst \
   \
   # lslua
-  ; lslua_ver=$(curl -sSL https://api.github.com/repos/sumneko/lua-language-server/releases -H 'Accept: application/vnd.github.v3+json' | jq -r '[.[]|select(.prerelease == false)][0].tag_name') \
+  ; lslua_ver=$(curl -sSL https://api.github.com/repos/sumneko/lua-language-server/releases/latest | jq -r '.tag_name') \
   ; lslua_url="https://github.com/sumneko/lua-language-server/releases/latest/download/lua-language-server-${lslua_ver}-linux-x64.tar.gz" \
   ; mkdir -p $LS_ROOT/sumneko_lua \
   ; curl -sSL ${lslua_url} | tar zxf - \
@@ -104,11 +104,11 @@ RUN set -eux \
 
 # nushell
 RUN set -eux \
-  ; zoxide_ver=$(curl -sSL https://api.github.com/repos/ajeetdsouza/zoxide/releases -H 'Accept: application/vnd.github.v4+json' | jq -r '[.[]|select(.prerelease == false)][0].tag_name' | cut -c 2-) \
+  ; zoxide_ver=$(curl -sSL https://api.github.com/repos/ajeetdsouza/zoxide/releases/latest | jq -r '.tag_name' | cut -c 2-) \
   ; zoxide_url="https://github.com/ajeetdsouza/zoxide/releases/latest/download/zoxide-${zoxide_ver}-x86_64-unknown-linux-musl.tar.gz" \
   ; curl -sSL ${zoxide_url} | tar zxf - -C $NU_ROOT zoxide \
   \
-  ; nu_ver=$(curl -sSL https://api.github.com/repos/nushell/nushell/releases -H 'Accept: application/vnd.github.v3+json' | jq -r '[.[]|select(.prerelease == false)][0].tag_name') \
+  ; nu_ver=$(curl -sSL https://api.github.com/repos/nushell/nushell/releases/latest | jq -r '.tag_name') \
   ; nu_url="https://github.com/nushell/nushell/releases/latest/download/nu-${nu_ver}-x86_64-unknown-linux-musl.tar.gz" \
   ; curl -sSL ${nu_url} | tar zxf - -C $NU_ROOT --strip-components=1 --wildcards '*/nu' \
   ; tar -C $(dirname $NU_ROOT) -cf - $(basename $NU_ROOT) | zstd -T0 -19 > $TARGET/nushell.tar.zst \
@@ -119,7 +119,7 @@ RUN set -eux \
 # utils
 COPY --from=dog /usr/local/bin/dog $UTILS_ROOT/dog
 RUN set -eux \
-  ; rg_ver=$(curl -sSL https://api.github.com/repos/BurntSushi/ripgrep/releases -H 'Accept: application/vnd.github.v3+json' | jq -r '[.[]|select(.prerelease == false)][0].tag_name') \
+  ; rg_ver=$(curl -sSL https://api.github.com/repos/BurntSushi/ripgrep/releases/latest | jq -r '.tag_name') \
   ; rg_url="https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep-${rg_ver}-x86_64-unknown-linux-musl.tar.gz" \
   ; curl -sSL ${rg_url} | tar zxf - -C $UTILS_ROOT --strip-components=1 --wildcards '*/rg' \
   \
@@ -127,27 +127,27 @@ RUN set -eux \
   ; yq_url="https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64.tar.gz" \
   ; curl -sSL ${yq_url} | tar zxf - && mv yq_linux_amd64 $UTILS_ROOT/yq \
   \
-  ; fd_ver=$(curl -sSL https://api.github.com/repos/sharkdp/fd/releases -H 'Accept: application/vnd.github.v3+json' | jq -r '[.[]|select(.prerelease == false)][0].tag_name') \
+  ; fd_ver=$(curl -sSL https://api.github.com/repos/sharkdp/fd/releases/latest | jq -r '.tag_name') \
   ; fd_url="https://github.com/sharkdp/fd/releases/latest/download/fd-${fd_ver}-x86_64-unknown-linux-musl.tar.gz" \
   ; curl -sSL ${fd_url} | tar zxf - -C $UTILS_ROOT --strip-components=1 --wildcards '*/fd' \
   \
-  ; sd_ver=$(curl -sSL https://api.github.com/repos/chmln/sd/releases -H 'Accept: application/vnd.github.v3+json' | jq -r '[.[]|select(.prerelease == false)][0].tag_name') \
+  ; sd_ver=$(curl -sSL https://api.github.com/repos/chmln/sd/releases/latest | jq -r '.tag_name') \
   ; echo "download sd ${sd_ver} in $(pwd)" \
   ; sd_url="https://github.com/chmln/sd/releases/latest/download/sd-${sd_ver}-x86_64-unknown-linux-musl" \
   ; curl -sSL ${sd_url} -o $UTILS_ROOT/sd && chmod +x $UTILS_ROOT/sd \
   \
-  ; just_ver=$(curl -sSL https://api.github.com/repos/casey/just/releases -H 'Accept: application/vnd.github.v3+json' | jq -r '[.[]|select(.prerelease == false)][0].tag_name') \
+  ; just_ver=$(curl -sSL https://api.github.com/repos/casey/just/releases/latest | jq -r '.tag_name') \
   ; just_url="https://github.com/casey/just/releases/latest/download/just-${just_ver}-x86_64-unknown-linux-musl.tar.gz" \
   ; curl -sSL ${just_url} | tar zxf - -C $UTILS_ROOT just \
   \
-  ; watchexec_ver=$(curl -sSL https://api.github.com/repos/watchexec/watchexec/releases -H 'Accept: application/vnd.github.v3+json' | jq -r '[.[]|select(.prerelease==false)][0].tag_name' | cut -c 2-) \
+  ; watchexec_ver=$(curl -sSL https://api.github.com/repos/watchexec/watchexec/releases/latest  | jq -r '.tag_name' | cut -c 2-) \
   ; watchexec_url="https://github.com/watchexec/watchexec/releases/latest/download/watchexec-${watchexec_ver}-x86_64-unknown-linux-gnu.tar.xz" \
   ; curl -sSL ${watchexec_url} | tar Jxf - --strip-components=1 -C $UTILS_ROOT --wildcards '*/watchexec' \
   \
   ; btm_url="https://github.com/ClementTsang/bottom/releases/latest/download/bottom_x86_64-unknown-linux-musl.tar.gz" \
   ; curl -sSL ${btm_url} | tar zxf - -C $UTILS_ROOT btm \
   \
-  ; dust_ver=$(curl -sSL https://api.github.com/repos/bootandy/dust/releases -H 'Accept: application/vnd.github.v3+json' | jq -r '[.[]|select(.prerelease == false)][0].tag_name') \
+  ; dust_ver=$(curl -sSL https://api.github.com/repos/bootandy/dust/releases/latest | jq -r '.tag_name') \
   ; dust_url="https://github.com/bootandy/dust/releases/latest/download/dust-${dust_ver}-x86_64-unknown-linux-musl.tar.gz" \
   ; curl -sSL ${dust_url} | tar zxf - -C $UTILS_ROOT --strip-components=1 --wildcards '*/dust' \
   \
@@ -162,7 +162,7 @@ RUN set -eux \
   ; nvim_url=https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz \
   ; curl -sSL ${nvim_url} | tar zxf - -C $NVIM_ROOT --strip-components=1 \
   \
-  ; rg_ver=$(curl -sSL https://api.github.com/repos/BurntSushi/ripgrep/releases -H 'Accept: application/vnd.github.v3+json' | jq -r '[.[]|select(.prerelease == false)][0].tag_name') \
+  ; rg_ver=$(curl -sSL https://api.github.com/repos/BurntSushi/ripgrep/releases/latest | jq -r '.tag_name') \
   ; rg_url="https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep-${rg_ver}-x86_64-unknown-linux-musl.tar.gz" \
   ; curl -sSL ${rg_url} | tar zxf - -C $NVIM_ROOT/bin --strip-components=1 --wildcards '*/rg' \
   \
