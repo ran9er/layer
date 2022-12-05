@@ -213,9 +213,12 @@ RUN set -eux \
   ; mkdir -p /target \
   ; tar -C /opt -cf - openresty | zstd -T0 -19 > /target/openresty.tar.zst
 
-#FROM fj0rd/scratch:py as python
 FROM fj0rd/0x:or
-#COPY --from=python /python.tar.zst /srv
 COPY --from=build /target /srv
 COPY --from=openresty /target /srv
+COPY nginx.conf /etc/openresty/nginx.conf
 COPY setup.sh /srv
+RUN set -eux \
+  ; ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime \
+  ; echo "$TIMEZONE" > /etc/timezone \
+  ; echo '{}' | jq '.build="'$(date -Is)'"' > /about.json
