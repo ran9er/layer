@@ -99,6 +99,7 @@ setup_lsnode() {
 setup_lslua() {
     echo --- setup lslua
     fetch lslua /opt/language-server/sumneko_lua
+    evx "PATH=/opt/language-server/sumneko_lua/bin:\$PATH"
     echo --- done
 }
 
