@@ -8,11 +8,6 @@ fetch () {
     curl -sSL ${HOST}/$1.tar.zst | zstd -d -T0 | tar -xf - -C $2 --strip-components=1
 }
 
-evx () {
-    echo "export $@\n" | tee -a ${HOME}/.profile
-    eval "export $@"
-}
-
 setup_nushell () {
     echo --- setup nushell
     fetch nushell /usr/local/bin
@@ -58,7 +53,7 @@ setup_node() {
     echo --- setup node, lspy, lsyaml, lsjson
     local tg=${NODE_ROOT:-/opt/node}
     fetch node $tg
-    evx "PATH=$tg/bin:\$PATH"
+    ln -fs ${NODE_ROOT:-/opt/node}/bin/node /usr/local/bin
     echo --- done
 }
 
@@ -66,8 +61,8 @@ setup_python() {
     echo --- setup python
     local tg=${PYTHON_ROOT:-/opt/python}
     fetch python $tg
-    evx "PATH=$tg/bin:\$PATH"
-    evx "LD_LIBRARY_PATH=$tg/lib:\$LD_LIBRARY_PATH"
+    # export LD_LIBRARY_PATH=$tg/lib:$LD_LIBRARY_PATH
+    ln -fs ${PYTHON_ROOT:-/opt/python}/bin/python3 /usr/local/bin
     echo --- done
 }
 
@@ -86,6 +81,7 @@ setup_ssh() {
 setup_lsphp() {
     echo --- setup lsphp
     fetch lsphp /opt/language-server/phpactor
+    ln -fs /opt/language-server/phpactor/bin/phpactor /usr/local/bin
     fetch phpdb /opt/language-server/vscode-php-debug
     echo --- done
 }
@@ -99,7 +95,7 @@ setup_lsnode() {
 setup_lslua() {
     echo --- setup lslua
     fetch lslua /opt/language-server/sumneko_lua
-    evx "PATH=/opt/language-server/sumneko_lua/bin:\$PATH"
+    ln -fs /opt/language-server/sumneko_lua/bin/lua-language-server /usr/local/bin
     echo --- done
 }
 
