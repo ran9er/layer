@@ -1,0 +1,94 @@
+component_tag:
+  - - config
+    - conf
+  - - language-server
+    - ls
+    - lsp
+  - - debugger
+    - dbg
+manifest:
+- name: nu
+  alias: [nushell]
+  source: nushell
+  target: /usr/local/bin
+- name: nuconfig
+  alias: [nu-config]
+  tag: [config]
+  belong: nu
+  source: nushell.conf
+  target: '{{config_home}}/nushell'
+- name: nvim
+  alias: [nvim, neovim, vim]
+  source: nvim
+  target: /usr/local
+- name: nvimconfig
+  alias: [nvim-config]
+  tag: [config]
+  belong: nvim
+  source: nvim.conf
+  target: '{{config_home}}/nvim'
+- name: wasm
+  alias: [wasmtime]
+  source: wasmtime
+  target: /usr/local/bin
+- name: openresty
+  alias: [or, openresty]
+  source: openresty
+  target: /opt/openresty
+- name: node
+  alias: [node, nodejs, lsyaml, lsjson]
+  source: node
+  target: '{{env_val NODE_ROOT /opt/node}}'
+  link: bin/node
+- name: lsnode
+  tag: [language-server]
+  belong: node
+  source: lsnode
+  target: /opt/language-server/vscode-node-debug2
+- name: python
+  alias: [py, python]
+  source: python
+  target: '{{env_val PYTHON_ROOT /opt/python}}'
+  link: bin/python3
+  env:
+    LD_LIBRARY_PATH: lib
+- name: lspy
+  tag: [language-server]
+  belong: python
+  require:
+  - node
+- name: utils
+  alias: [utils, tool, cli]
+  source: utils
+  target: /usr/local/bin
+- name: ssh
+  alias: [ssh, sshd, dropbear]
+  source: sshd
+  target: /
+- name: php
+  alias: []
+- name: lsphp
+  belong: php
+  tag: [language-server]
+  source: lsphp
+  target: /opt/language-server/phpactor
+- name: phpdb
+  belong: php
+  tag: [debugger]
+  source: phpdb
+  target: /opt/language-server/vscode-php-debug
+  require:
+  - node
+- name: lua
+  alias: [lua]
+- name: lslua
+  belong: lua
+  tag: [language-server]
+  source: lslua
+  target: /opt/language-server/sumneko_lua
+  link: bin/lua-language-server
+- name: vscode
+  alias: [vs, vscode]
+  source: vscode-server
+  target: '{{env_val HOME}}/.vscode-server'
+
