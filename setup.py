@@ -8,7 +8,7 @@ input = sys.argv
 
 action = input[2]
 file = Path(input[1])
-source = input[3]
+host = input[3]
 arg = re.split(r'[\s,/|]', ' '.join(input[4:]))
 data = yaml.safe_load(file.read_text())
 
@@ -53,7 +53,7 @@ def coll_deps(ent):
         return
     for r in ent['requires']:
         requires.add(r)
-        coll_deps(deref(r)) 
+        coll_deps(deref(r))
 
 for i in target:
     coll_deps(deref(i))
@@ -68,10 +68,11 @@ for i in target:
 def gen_setup(entity):
     name = entity['name']
     tg = entity.get('target')
-    print(f'## {name}')
+    src = entity.get('source')
+    print(f'echo "<----------- setup {name}" ')
     if tg:
         print(f'mkdir -p {tg}')
-        print(f'curl -sSL {source}/{name}.tar.zst | zstd -d -T0 | tar -xf - -C {tg} --strip-components=1')
+        print(f'curl -sSL {host}/{src}.tar.zst | zstd -d -T0 | tar -xf - -C {tg} --strip-components=1')
         if entity.get('link'):
             print(f'ln -fs {tg}/{entity["link"]} /usr/local/bin/')
 
@@ -80,9 +81,10 @@ def lst(taget, tags):
     print(f'# components: {", ".join(components)}')
 
 def setup(taget, tags):
+    print('#!/bin/sh')
     print(f'# setup {", ".join(taget)} with {", ".join(tags)}')
-    print('set -eux')
-    print('config_home=${XDG_CONFIG_HOME:-$HOME}')
+    print('set -eu')
+    print('config_home=${XDG_CONFIG_HOME:-$HOME/.config}')
     lst = []
     for i in requires:
         if not i in lst:
