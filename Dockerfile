@@ -218,9 +218,12 @@ FROM fj0rd/0x:or
 COPY --from=build /target /srv
 COPY --from=openresty /target /srv
 COPY nginx.conf /etc/openresty/nginx.conf
-COPY setup.sh /srv
+#COPY setup.sh /srv
+COPY setup.py /
+COPY setup.yaml /
 RUN set -eux \
   ; ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime \
   ; echo "$TIMEZONE" > /etc/timezone \
+  ; apk add --no-cache python3 py3-yaml \
   ; echo '{}' | jq '.build="'$(date -Is)'"' > /about.json
 

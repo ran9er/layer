@@ -1,14 +1,15 @@
 import yaml
 from pathlib import Path
+import re
 import sys
 
-# input = sys.argv
-input = ['setup', 'http://localhost', 'nu', 'vim', 'conf', 'python',  'php', 'lslua', 'ls']
+input = sys.argv
+# /usr/bin/python3 ./setup.py ./setup.yaml setup http://localhost:8080 nu,nvim
 
-action = input[0]
-source = input[1]
-arg = input[2:]
-file = Path('.') / 'setup.yaml'
+action = input[2]
+file = Path(input[1])
+source = input[3]
+arg = re.split(r'[\s,/|]', ' '.join(input[4:]))
 data = yaml.safe_load(file.read_text())
 
 manifest = data['manifest']
@@ -69,6 +70,7 @@ def lst(taget, tags):
 
 def setup(taget, tags):
     print(f'# setup {", ".join(taget)} with {", ".join(tags)}')
+    print('set -eux')
     print('config_home=${XDG_CONFIG_HOME:-$HOME}')
     lst = []
     for i in requires:
@@ -84,7 +86,45 @@ def setup(taget, tags):
         gen_setup(manifest[alias_index[i]])
     print(f'# manifests: {", ".join(lst)}')
 
+MIRROR = '''
+china_mirrors() {
+    local b_u="cp /etc/apt/sources.list /etc/apt/sources.list.\$(date +%y%m%d%H%M%S)"
+    local b_a="cp /etc/apk/repositories /etc/apk/repositories.\$(date +%y%m%d%H%M%S)"
+    local s_u="sed -i 's/\(archive\|security\).ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list"
+    local s_d="sed -i 's/\(.*\)\(security\|deb\).debian.org\(.*\)main/\1mirrors.ustc.edu.cn\3main contrib non-free/g' /etc/apt/sources.list"
+    local s_a="sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories"
+    local s="" #$([ 0 < $UID ] && echo sudo)
+    local cmd
+    local os
+    if [ -n "$1" ]; then
+        cmd="echo"
+        os="$1"
+    else
+        cmd="$s"
+        os=$(grep ^ID= /etc/os-release | sed 's/ID=\(.*\)/\1/')
+    fi
+    case $os in
+        ubuntu )
+            eval "$cmd $b_u"
+            eval "$cmd $s_u"
+            ;;
+        debian )
+            eval "$cmd $b_u"
+            eval "$cmd $s_d"
+            ;;
+        alpine )
+            eval "$cmd $b_a"
+            eval "$cmd $s_a"
+            ;;
+        * )
+    esac
+}
+
+china_mirrors
+'''
 if action == 'list':
     lst(target, tags)
 elif action == 'setup':
     setup(target, tags)
+elif action == 'mirror':
+    print(MIRROR)
