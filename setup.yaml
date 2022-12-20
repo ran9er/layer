@@ -55,7 +55,7 @@ manifest:
 - name: lspy
   tag: [language-server]
   belong: python
-  require:
+  requires:
   - node
 - name: utils
   alias: [utils, tool, cli]
@@ -77,7 +77,7 @@ manifest:
   tag: [debugger]
   source: phpdb
   target: /opt/language-server/vscode-php-debug
-  require:
+  requires:
   - node
 - name: lua
   alias: [lua]

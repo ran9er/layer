@@ -1,10 +1,10 @@
 import yaml
 from pathlib import Path
 import re
-import sys
+import sys, os
 
 input = sys.argv
-# /usr/bin/python3 ./setup.py ./setup.yaml setup http://localhost:8080 nu,nvim
+#input = re.split(r'\s+', './setup.py ./setup.yaml setup http://localhost:8080 python')
 
 action = input[2]
 file = Path(input[1])
@@ -45,14 +45,25 @@ for a in arg:
     if a in alias_map:
         target.add(alias_map[a])
 
+def deref(name):
+    return manifest[alias_index[alias_map[name]]]
+
+def coll_deps(ent):
+    if not ent.get('requires'):
+        return
+    for r in ent['requires']:
+        requires.add(r)
+        coll_deps(deref(r)) 
+
 for i in target:
+    coll_deps(deref(i))
     if i in alias_dep:
         for x in alias_dep[i]:
-            m = manifest[alias_index[alias_map[x]]]
+            m = deref(x)
             if set(m['tag']).intersection(tags):
                 components.add(x)
+                coll_deps(m)
 
-# calc deps
 
 def gen_setup(entity):
     name = entity['name']
@@ -83,7 +94,7 @@ def setup(taget, tags):
         if not i in lst:
             lst.append(i)
     for i in lst:
-        gen_setup(manifest[alias_index[i]])
+        gen_setup(deref(i))
     print(f'# manifests: {", ".join(lst)}')
 
 MIRROR = '''
