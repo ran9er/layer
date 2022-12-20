@@ -97,6 +97,9 @@ def setup(taget, tags):
         gen_setup(deref(i))
     print(f'# manifests: {", ".join(lst)}')
 
+def collect(manifest):
+    pass
+
 MIRROR = '''
 china_mirrors() {
     local b_u="cp /etc/apt/sources.list /etc/apt/sources.list.\$(date +%y%m%d%H%M%S)"
@@ -139,3 +142,5 @@ elif action == 'setup':
     setup(target, tags)
 elif action == 'mirror':
     print(MIRROR)
+elif action == 'collect':
+    collect(manifest)

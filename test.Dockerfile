@@ -1,6 +1,5 @@
-FROM ubuntu
+FROM 0x:or
 
 RUN set -eux \
-  ; apt-get update \
-  ; apt-get install -y --no-install-recommends curl zstd git \
-  ; apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
+  ; curl layer.xinminghui.com/setup.sh | sh -s china \
+  ; apk add --no-cache python3 py3-yaml
