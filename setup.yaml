@@ -16,7 +16,7 @@ manifest:
   tag: [config]
   belong: nu
   source: nushell.conf
-  target: '{{config_home}}/nushell'
+  target: '${config_home}/nushell'
 - name: nvim
   alias: [nvim, neovim, vim]
   source: nvim
@@ -26,7 +26,7 @@ manifest:
   tag: [config]
   belong: nvim
   source: nvim.conf
-  target: '{{config_home}}/nvim'
+  target: '${config_home}/nvim'
 - name: wasm
   alias: [wasmtime]
   source: wasmtime
@@ -38,7 +38,7 @@ manifest:
 - name: node
   alias: [node, nodejs, lsyaml, lsjson]
   source: node
-  target: '{{env_val NODE_ROOT /opt/node}}'
+  target: '${NODE_ROOT:-/opt/node}'
   link: bin/node
 - name: lsnode
   tag: [language-server]
@@ -48,7 +48,7 @@ manifest:
 - name: python
   alias: [py, python]
   source: python
-  target: '{{env_val PYTHON_ROOT /opt/python}}'
+  target: '${PYTHON_ROOT:-/opt/python}'
   link: bin/python3
   env:
     LD_LIBRARY_PATH: lib
@@ -90,5 +90,5 @@ manifest:
 - name: vscode
   alias: [vs, vscode]
   source: vscode-server
-  target: '{{env_val HOME}}/.vscode-server'
+  target: '${HOME}/.vscode-server'
 

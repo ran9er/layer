@@ -51,9 +51,17 @@ for i in target:
             if set(m['tag']).intersection(tags):
                 components.add(x)
 
+# calc deps
 
 def gen_setup(entity):
-    print(f'## {entity["name"]}')
+    name = entity['name']
+    tg = entity.get('target')
+    print(f'## {name}')
+    if tg:
+        print(f'mkdir -p {tg}')
+        print(f'curl -sSL {source}/{name}.tar.zst | zstd -d -T0 | tar -xf - -C {tg} --strip-components=1')
+        if entity.get('link'):
+            print(f'ln -fs {tg}/{entity["link"]} /usr/local/bin/')
 
 def lst(taget, tags):
     print(f'# setup {", ".join(taget)} with {", ".join(tags)}')
@@ -61,6 +69,7 @@ def lst(taget, tags):
 
 def setup(taget, tags):
     print(f'# setup {", ".join(taget)} with {", ".join(tags)}')
+    print('config_home=${XDG_CONFIG_HOME:-$HOME}')
     lst = []
     for i in requires:
         if not i in lst:
