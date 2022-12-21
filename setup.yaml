@@ -52,7 +52,7 @@ manifest:
   target: '${PYTHON_ROOT:-/opt/python}'
   link: bin/python3
   env:
-    LD_LIBRARY_PATH: lib
+    LD_LIBRARY_PATH: '${PYTHON_ROOT:-/opt/python}/lib'
 - name: lspy
   tag: [language-server]
   belong: python

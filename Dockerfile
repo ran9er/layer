@@ -224,6 +224,7 @@ COPY setup.yaml /
 RUN set -eux \
   ; ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime \
   ; echo "$TIMEZONE" > /etc/timezone \
-  ; apk add --no-cache python3 py3-yaml \
+  ; apk add --no-cache python3 py3-pip \
+  ; pip3 --no-cache-dir install pyyaml pystache \
   ; echo '{}' | jq '.build="'$(date -Is)'"' > /about.json
 

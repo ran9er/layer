@@ -77,6 +77,9 @@ def gen_setup(entity):
         print(f'curl -sSL {host}/{src}.tar.zst | zstd -d -T0 | tar -xf - -C {tg} --strip-components=1')
         if entity.get('link'):
             print(f'ln -fs {tg}/{entity["link"]} /usr/local/bin/')
+        if entity.get('env'):
+            for k, v in entity['env'].items():
+                print(f'echo "export {k}={v}" >> ${{HOME}}/.profile')
 
 def lst(taget, tags):
     print(f'# setup {", ".join(taget)} with {", ".join(tags)}')
