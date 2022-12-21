@@ -1,6 +1,7 @@
 component_tag:
   - - config
     - conf
+    - cfg
   - - language-server
     - ls
     - lsp
@@ -16,7 +17,7 @@ manifest:
   tag: [config]
   belong: nu
   source: nushell.conf
-  target: '${config_home}/nushell'
+  target: '${CONFIG_ROOT}/nushell'
 - name: nvim
   alias: [nvim, neovim, vim]
   source: nvim
@@ -26,7 +27,7 @@ manifest:
   tag: [config]
   belong: nvim
   source: nvim.conf
-  target: '${config_home}/nvim'
+  target: '${CONFIG_ROOT}/nvim'
 - name: wasm
   alias: [wasmtime]
   source: wasmtime

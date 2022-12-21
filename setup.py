@@ -3,8 +3,8 @@ from pathlib import Path
 import re
 import sys, os
 
+# python3 ./setup.py ./setup.yaml setup http://localhost:8080 python,nvim
 input = sys.argv
-#input = re.split(r'\s+', './setup.py ./setup.yaml setup http://localhost:8080 python')
 
 action = input[2]
 file = Path(input[1])
@@ -71,6 +71,8 @@ def gen_setup(entity):
     src = entity.get('source')
     print(f'echo "<----------- setup {name}" ')
     if tg:
+        if 'config' in entity.get('tag', []):
+            print(f'rm -rf {tg}')
         print(f'mkdir -p {tg}')
         print(f'curl -sSL {host}/{src}.tar.zst | zstd -d -T0 | tar -xf - -C {tg} --strip-components=1')
         if entity.get('link'):
@@ -84,7 +86,7 @@ def setup(taget, tags):
     print('#!/bin/sh')
     print(f'# setup {", ".join(taget)} with {", ".join(tags)}')
     print('set -eu')
-    print('config_home=${XDG_CONFIG_HOME:-$HOME/.config}')
+    print('CONFIG_ROOT=${XDG_CONFIG_HOME:-$HOME/.config}')
     lst = []
     for i in requires:
         if not i in lst:
