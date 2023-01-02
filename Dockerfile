@@ -197,6 +197,16 @@ RUN set -eux \
   ; tar -C $(dirname $SSHD_ROOT) -cf - $(basename $SSHD_ROOT) | zstd -T0 -19 > $TARGET/sshd.tar.zst \
   ;
 
+# kubectl
+RUN set -eux \
+  ; mkdir /opt/kubectl \
+  ; k8s_ver=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt | cut -c 2-) \
+  ; k8s_url="https://dl.k8s.io/v${k8s_ver}/kubernetes-client-linux-amd64.tar.gz" \
+  ; curl -L ${k8s_url} | tar zxf - --strip-components=3 -C /opt/kubectl kubernetes/client/bin/kubectl \
+  ; chmod +x /opt/kubectl/kubectl \
+  ; tar -C /opt -cf - kubectl | zstd -T0 -19 > $TARGET/kubectl.tar.zst \
+  ;
+
 # vscode-server
 RUN set -eux \
   ; commit_id=$(curl -sSL https://github.com/microsoft/vscode/tags \

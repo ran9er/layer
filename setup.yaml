@@ -88,6 +88,10 @@ manifest:
   source: lslua
   target: /opt/language-server/sumneko_lua
   link: bin/lua-language-server
+- name: kubectl
+  alias: [k8s]
+  source: kubectl
+  target: /usr/local/bin
 - name: vscode
   alias: [vs, vscode]
   source: vscode-server
