@@ -181,8 +181,8 @@ RUN set -eux \
 # python
 ARG PYTHON_VERSION=3.10
 RUN set -eux \
-  ; py_url=$(curl -sSL https://api.github.com/repos/indygreg/python-build-standalone/releases -H 'Accept: application/vnd.github.v3+json' \
-          | jq -r '[.[]|select(.prerelease == false)][0].assets[].browser_download_url' \
+  ; py_url=$(curl -sSL https://api.github.com/repos/indygreg/python-build-standalone/releases/latest \
+          | jq -r '.assets[].browser_download_url' \
           | grep -v sha256 \
           | grep x86_64-unknown-linux-musl-install_only \
           | grep ${PYTHON_VERSION} \
@@ -197,9 +197,27 @@ RUN set -eux \
   ; tar -C $(dirname $SSHD_ROOT) -cf - $(basename $SSHD_ROOT) | zstd -T0 -19 > $TARGET/sshd.tar.zst \
   ;
 
+# mutagen
+RUN set -eux \
+  ; mkdir -p /opt/mutagen \
+  ; cd /opt/mutagen \
+  ; mutagen_ver=$(curl -sSL https://api.github.com/repos/mutagen-io/mutagen/releases/latest | jq -r '.tag_name') \
+  ; curl -sSL https://github.com/mutagen-io/mutagen/releases/download/${mutagen_ver}/mutagen_windows_amd64_${mutagen_ver}.tar.gz | tar -zxf - -C /opt/mutagen \
+  ; rm -f mutagen-agents.tar.gz \
+  ; curl -sSL https://github.com/mutagen-io/mutagen/releases/download/${mutagen_ver}/mutagen_linux_amd64_${mutagen_ver}.tar.gz | tar -zxf - -C /opt/mutagen \
+  ; mkdir mutagen-agents \
+  ; tar zxvf mutagen-agents.tar.gz -C mutagen-agents \
+  ; rm -f mutagen-agents.tar.gz \
+  ; tar zcvf mutagen-agents.tar.gz -C mutagen-agents \
+        linux_386 linux_amd64 linux_arm linux_arm64 \
+        windows_386 windows_amd64 darwin_amd64 freebsd_amd64 \
+  ; rm -rf mutagen-agents \
+  ; tar -C /opt -cf - mutagen | zstd -T0 -19 > $TARGET/mutagen.tar.zst \
+  ;
+
 # kubectl
 RUN set -eux \
-  ; mkdir /opt/kubectl \
+  ; mkdir -p /opt/kubectl \
   ; k8s_ver=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt | cut -c 2-) \
   ; k8s_url="https://dl.k8s.io/v${k8s_ver}/kubernetes-client-linux-amd64.tar.gz" \
   ; curl -L ${k8s_url} | tar zxf - --strip-components=3 -C /opt/kubectl kubernetes/client/bin/kubectl \
