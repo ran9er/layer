@@ -112,7 +112,7 @@ china_mirrors() {
     local b_u="cp /etc/apt/sources.list /etc/apt/sources.list.\$(date +%y%m%d%H%M%S)"
     local b_a="cp /etc/apk/repositories /etc/apk/repositories.\$(date +%y%m%d%H%M%S)"
     local s_u="sed -i 's/\(archive\|security\).ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list"
-    local s_d="sed -i 's/\(.*\)\(security\|deb\).debian.org\(.*\)main/\1mirrors.ustc.edu.cn\3main contrib non-free/g' /etc/apt/sources.list"
+    local s_d="sed -i 's/\(.*\)\(security\|deb\).debian.org\(.*\)main/\\1mirrors.ustc.edu.cn\\3main contrib non-free/g' /etc/apt/sources.list"
     local s_a="sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories"
     local s="" #$([ 0 < $UID ] && echo sudo)
     local cmd
@@ -122,7 +122,7 @@ china_mirrors() {
         os="$1"
     else
         cmd="$s"
-        os=$(grep ^ID= /etc/os-release | sed 's/ID=\(.*\)/\1/')
+        os=$(grep ^ID= /etc/os-release | sed 's/ID=\(.*\)/\\1/')
     fi
     case $os in
         ubuntu )
