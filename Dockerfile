@@ -178,7 +178,7 @@ RUN set -eux \
   ; tar -C ${XDG_CONFIG_HOME} -cf - nvim | zstd -T0 -19 > $TARGET/nvim.conf.tar.zst
 
 # python
-ARG PYTHON_VERSION=3.10
+ARG PYTHON_VERSION=3.11
 RUN set -eux \
   ; py_url=$(curl -sSL https://api.github.com/repos/indygreg/python-build-standalone/releases/latest \
           | jq -r '.assets[].browser_download_url' \
