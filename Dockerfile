@@ -184,7 +184,7 @@ RUN set -eux \
           | jq -r '.assets[].browser_download_url' \
           | grep -v sha256 \
           | grep x86_64-unknown-linux-musl-install_only \
-          | grep ${PYTHON_VERSION} \
+          | grep -F ${PYTHON_VERSION} \
           )\
   ; curl -sSL ${py_url} | tar zxf - -C ${PYTHON_ROOT} --strip-components=1 \
   ; ${PYTHON_ROOT}/bin/pip3 --no-cache-dir install debugpy \
