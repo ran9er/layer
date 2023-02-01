@@ -174,7 +174,7 @@ RUN set -eux \
   \
   ; tsl=$(cat $XDG_CONFIG_HOME/nvim/lua/lang/treesitter_lang.json|jq -r 'join(" ")') \
   ; nvim --headless -c "TSUpdateSync ${tsl}" -c 'quit' \
-  ; rm -rf $XDG_CONFIG_HOME/nvim/pack/packer/*/*/.git \
+  ; rm -rf $XDG_CONFIG_HOME/nvim/lazy/packages/*/.git \
   ; tar -C ${XDG_CONFIG_HOME} -cf - nvim | zstd -T0 -19 > $TARGET/nvim.conf.tar.zst
 
 # python
