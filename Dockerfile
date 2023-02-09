@@ -113,6 +113,7 @@ RUN set -eux \
   ; curl -sSL ${nu_url} | tar zxf - -C $NU_ROOT --strip-components=1 --wildcards '*/nu' \
   ; tar -C $(dirname $NU_ROOT) -cf - $(basename $NU_ROOT) | zstd -T0 -19 > $TARGET/nushell.tar.zst \
   ; git clone --depth=1 https://github.com/fj0r/nushell.git ${HOME}/.config/nushell \
+  ; opwd=$PWD; cd ${HOME}/.config/nushell; git log -1 --date=iso; cd $opwd \
   ; tar -C ${HOME}/.config -cf - nushell | zstd -T0 -19 > $TARGET/nushell.conf.tar.zst \
   ;
 
@@ -170,6 +171,7 @@ RUN set -eux \
   \
   ; mkdir -p ${XDG_CONFIG_HOME} \
   ; git clone --depth=1 https://github.com/fj0r/nvim-lua.git $XDG_CONFIG_HOME/nvim \
+  ; opwd=$PWD; cd $XDG_CONFIG_HOME/nvim; git log -1 --date=iso; cd $opwd \
   ; nvim --headless "+Lazy! sync" +qa \
   \
   ; tsl=$(cat $XDG_CONFIG_HOME/nvim/lua/settings/treesitter.json|jq -r '.languages|join(" ")') \
@@ -187,7 +189,7 @@ RUN set -eux \
           | grep -F ${PYTHON_VERSION} \
           )\
   ; curl -sSL ${py_url} | tar zxf - -C ${PYTHON_ROOT} --strip-components=1 \
-  ; ${PYTHON_ROOT}/bin/pip3 --no-cache-dir install debugpy \
+  ; ${PYTHON_ROOT}/bin/pip3 --no-cache-dir install debugpy neovim \
   ; tar -C $(dirname $PYTHON_ROOT) -cf - $(basename $PYTHON_ROOT) | zstd -T0 -19 > $TARGET/python.tar.zst
 
 # sshd
