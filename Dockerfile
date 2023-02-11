@@ -74,6 +74,7 @@ RUN set -eux \
         pyright \
         vscode-langservers-extracted \
         yaml-language-server \
+        neovim \
   ; npm cache clean -f \
   ; tar -C $(dirname $NODE_ROOT) -cf - $(basename $NODE_ROOT)| zstd -T0 -19 > $TARGET/node.tar.zst \
   \
