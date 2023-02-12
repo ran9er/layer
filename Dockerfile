@@ -75,9 +75,9 @@ RUN set -eux \
           | grep -F ${PYTHON_VERSION} \
           )\
   ; curl -sSL ${py_url} | tar zxf - -C ${PYTHON_ROOT} --strip-components=1 \
-  ; CC="/opt/musl/bin/x86_64-linux-musl-gcc -fPIE -pie" \
-  ; ${PYTHON_ROOT}/bin/pip3 --no-cache-dir install --use-pep517 \
-        debugpy neovim \
+  #; CC="/opt/musl/bin/x86_64-linux-musl-gcc -fPIE -pie" \
+  #; ${PYTHON_ROOT}/bin/pip3 --no-cache-dir install --use-pep517 debugpy neovim \
+  ; ${PYTHON_ROOT}/bin/pip3 --no-cache-dir install debugpy \
   ; tar -C $(dirname $PYTHON_ROOT) -cf - $(basename $PYTHON_ROOT) | zstd -T0 -19 > $TARGET/python.tar.zst
 
 # wasmtime
