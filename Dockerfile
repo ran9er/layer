@@ -191,7 +191,8 @@ RUN set -eux \
           | grep -F ${PYTHON_VERSION} \
           )\
   ; curl -sSL ${py_url} | tar zxf - -C ${PYTHON_ROOT} --strip-components=1 \
-  ; ${PYTHON_ROOT}/bin/pip3 --no-cache-dir install debugpy neovim \
+  ; ${PYTHON_ROOT}/bin/pip3 --no-cache-dir install --use-pep517 \
+        debugpy neovim \
   ; tar -C $(dirname $PYTHON_ROOT) -cf - $(basename $PYTHON_ROOT) | zstd -T0 -19 > $TARGET/python.tar.zst
 
 # sshd
