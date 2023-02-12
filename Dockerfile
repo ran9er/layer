@@ -79,12 +79,11 @@ RUN set -eux \
   ; tar -C $(dirname $NODE_ROOT) -cf - $(basename $NODE_ROOT)| zstd -T0 -19 > $TARGET/node.tar.zst \
   \
   # lslua
-  ; lslua_ver=$(curl -sSL https://api.github.com/repos/sumneko/lua-language-server/releases/latest | jq -r '.tag_name') \
-  ; lslua_url="https://github.com/sumneko/lua-language-server/releases/latest/download/lua-language-server-${lslua_ver}-linux-x64.tar.gz" \
-  ; mkdir -p $LS_ROOT/sumneko_lua \
-  ; curl -sSL ${lslua_url} | tar zxf - \
-      -C $LS_ROOT/sumneko_lua \
-  ; tar -C $LS_ROOT -cf - sumneko_lua | zstd -T0 -19 > $TARGET/lslua.tar.zst \
+  ; lslua_ver=$(curl -sSL https://api.github.com/repos/LuaLS/lua-language-server/releases/latest | jq -r '.tag_name') \
+  ; lslua_url="https://github.com/LuaLS/lua-language-server/releases/latest/download/lua-language-server-${lslua_ver}-linux-x64.tar.gz" \
+  ; mkdir -p $LS_ROOT/lua-language-server \
+  ; curl -sSL ${lslua_url} | tar zxf - -C $LS_ROOT/lua-language-server \
+  ; tar -C $LS_ROOT -cf - lua-language-server | zstd -T0 -19 > $TARGET/lslua.tar.zst \
   \
   # lsnode
   ; git clone --depth=1 https://github.com/microsoft/vscode-node-debug2.git $LS_ROOT/vscode-node-debug2 \
