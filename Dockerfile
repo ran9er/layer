@@ -178,8 +178,6 @@ RUN set -eux \
   ; opwd=$PWD; cd $XDG_CONFIG_HOME/nvim; git log -1 --date=iso; cd $opwd \
   ; nvim --headless "+Lazy! sync" +qa \
   \
-  ; tsl=$(cat $XDG_CONFIG_HOME/nvim/lua/settings/treesitter.json|jq -r '.languages|join(" ")') \
-  ; nvim --headless -c "TSUpdateSync ${tsl}" -c 'quit' \
   ; rm -rf $XDG_CONFIG_HOME/nvim/lazy/packages/*/.git \
   ; tar -C ${XDG_CONFIG_HOME} -cf - nvim | zstd -T0 -19 > $TARGET/nvim.conf.tar.zst
 
