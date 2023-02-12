@@ -37,9 +37,21 @@ RUN set -eux \
   ; apt update \
   ; apt-get install -y --no-install-recommends \
         curl gnupg ca-certificates \
-        zstd xz-utils unzip \
+        zstd xz-utils unzip tree \
         jq ripgrep git build-essential \
+        musl musl-dev musl-tools \
   ; apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* \
+  \
+  ; mkdir -p /opt/musl \
+  ; mkdir -p /opt/musl-src \
+  ; musl_ver=$(curl -sSL https://musl.libc.org | rg 'Latest release: <a href="(.+)">' -or '$1') \
+  ; curl -sSL https://musl.libc.org/${musl_ver} | tar zxf - -C /opt/musl-src --strip-components=1 \
+  ; cd /opt/musl-src \
+  ; ./configure --prefix=/opt/musl --disable-shared \
+  ; make \
+  ; make install \
+  ; tree /opt/musl \
+  ; curl -sSL https://musl.cc/x86_64-linux-musl-cross.tgz | tar zxf - -C /opt/musl --strip-components=1 \
   \
   ; mkdir -p ${TARGET} \
   ; mkdir -p $NVIM_ROOT \
@@ -52,6 +64,21 @@ RUN set -eux \
   ; mkdir -p $PYTHON_ROOT \
   ; mkdir -p $VSCODE_ROOT \
   ;
+
+# python
+ARG PYTHON_VERSION=3.11
+RUN set -eux \
+  ; py_url=$(curl -sSL https://api.github.com/repos/indygreg/python-build-standalone/releases/latest \
+          | jq -r '.assets[].browser_download_url' \
+          | grep -v sha256 \
+          | grep x86_64-unknown-linux-musl-install_only \
+          | grep -F ${PYTHON_VERSION} \
+          )\
+  ; curl -sSL ${py_url} | tar zxf - -C ${PYTHON_ROOT} --strip-components=1 \
+  ; CC="/opt/musl/bin/x86_64-linux-musl-gcc -fPIE -pie" \
+  ; ${PYTHON_ROOT}/bin/pip3 --no-cache-dir install --use-pep517 \
+        debugpy neovim \
+  ; tar -C $(dirname $PYTHON_ROOT) -cf - $(basename $PYTHON_ROOT) | zstd -T0 -19 > $TARGET/python.tar.zst
 
 # wasmtime
 RUN set -eux \
@@ -180,20 +207,6 @@ RUN set -eux \
   \
   ; rm -rf $XDG_CONFIG_HOME/nvim/lazy/packages/*/.git \
   ; tar -C ${XDG_CONFIG_HOME} -cf - nvim | zstd -T0 -19 > $TARGET/nvim.conf.tar.zst
-
-# python
-ARG PYTHON_VERSION=3.11
-RUN set -eux \
-  ; py_url=$(curl -sSL https://api.github.com/repos/indygreg/python-build-standalone/releases/latest \
-          | jq -r '.assets[].browser_download_url' \
-          | grep -v sha256 \
-          | grep x86_64-unknown-linux-musl-install_only \
-          | grep -F ${PYTHON_VERSION} \
-          )\
-  ; curl -sSL ${py_url} | tar zxf - -C ${PYTHON_ROOT} --strip-components=1 \
-  ; ${PYTHON_ROOT}/bin/pip3 --no-cache-dir install --use-pep517 \
-        debugpy neovim \
-  ; tar -C $(dirname $PYTHON_ROOT) -cf - $(basename $PYTHON_ROOT) | zstd -T0 -19 > $TARGET/python.tar.zst
 
 # sshd
 COPY --from=dropbear / $SSHD_ROOT
