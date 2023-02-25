@@ -69,12 +69,12 @@ def gen_setup(entity):
     name = entity['name']
     tg = entity.get('target')
     src = entity.get('source')
-    print(f'echo "<----------- setup {name}" ')
+    print(f'echo "setup {name}" ')
     if tg:
         if 'config' in entity.get('tag', []):
             print(f'rm -rf {tg}')
         print(f'mkdir -p {tg}')
-        print(f'curl -sSL {host}/{src}.tar.zst | zstd -d -T0 | tar -xf - -C {tg} --strip-components=1')
+        print(f'curl -SL --progress-bar {host}/{src}.tar.zst | zstd -d -T0 | tar -xf - -C {tg} --strip-components=1')
         if entity.get('link'):
             print(f'ln -fs {tg}/{entity["link"]} /usr/local/bin/')
         if entity.get('env'):
@@ -87,7 +87,9 @@ def lst(taget, tags):
 
 def setup(taget, tags):
     print('#!/bin/sh')
-    print(f'# setup {", ".join(taget)} with {", ".join(tags)}')
+    print('echo')
+    print(f'echo ... {", ".join(taget)} with {", ".join(tags)}')
+    print('echo')
     print('set -eu')
     print('CONFIG_ROOT=${XDG_CONFIG_HOME:-$HOME/.config}')
     lst = []
