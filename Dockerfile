@@ -222,6 +222,8 @@ RUN set -eux \
   ; mutagen_ver=$(curl -sSL https://api.github.com/repos/mutagen-io/mutagen/releases/latest | jq -r '.tag_name') \
   ; curl -sSL https://github.com/mutagen-io/mutagen/releases/download/${mutagen_ver}/mutagen_windows_amd64_${mutagen_ver}.tar.gz | tar -zxf - -C /opt/mutagen \
   ; rm -f mutagen-agents.tar.gz \
+  ; curl -sSL https://github.com/mutagen-io/mutagen/releases/download/${mutagen_ver}/mutagen_linux_arm64_${mutagen_ver}.tar.gz | tar -zxf - -C /opt/mutagen \
+  ; rm -f mutagen-agents.tar.gz \
   ; curl -sSL https://github.com/mutagen-io/mutagen/releases/download/${mutagen_ver}/mutagen_linux_amd64_${mutagen_ver}.tar.gz | tar -zxf - -C /opt/mutagen \
   ; mkdir mutagen-agents \
   ; tar zxvf mutagen-agents.tar.gz -C mutagen-agents \
