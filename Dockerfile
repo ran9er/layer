@@ -267,8 +267,7 @@ COPY --from=build /target /srv
 COPY --from=openresty /target /srv
 COPY nginx.conf /etc/openresty/nginx.conf
 #COPY setup.sh /srv
-COPY setup.py /
-COPY setup.yaml /
+COPY app /app
 RUN set -eux \
   ; ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime \
   ; echo "$TIMEZONE" > /etc/timezone \
