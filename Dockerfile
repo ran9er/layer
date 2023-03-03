@@ -39,19 +39,8 @@ RUN set -eux \
         curl gnupg ca-certificates \
         zstd xz-utils unzip tree \
         jq ripgrep git build-essential \
-        musl musl-dev musl-tools \
+        #musl musl-dev musl-tools \
   ; apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* \
-  \
-  ; mkdir -p /opt/musl \
-  ; mkdir -p /opt/musl-src \
-  ; musl_ver=$(curl -sSL https://musl.libc.org | rg 'Latest release: <a href="(.+)">' -or '$1') \
-  ; curl -sSL https://musl.libc.org/${musl_ver} | tar zxf - -C /opt/musl-src --strip-components=1 \
-  ; cd /opt/musl-src \
-  ; ./configure --prefix=/opt/musl --disable-shared \
-  ; make \
-  ; make install \
-  ; tree /opt/musl \
-  ; curl -sSL https://musl.cc/x86_64-linux-musl-cross.tgz | tar zxf - -C /opt/musl --strip-components=1 \
   \
   ; mkdir -p ${TARGET} \
   ; mkdir -p $NVIM_ROOT \
@@ -267,12 +256,14 @@ RUN set -eux \
 
 
 #------
+FROM fj0rd/scratch:zstd as zstd
 FROM fj0rd/0x:latest as openresty
 RUN set -eux \
   ; mkdir -p /target \
   ; tar -C /opt -cf - openresty | zstd -T0 -19 > /target/openresty.tar.zst
 
 FROM fj0rd/0x:or
+COPY --from=zstd /usr/local/bin/zstd /srv
 COPY --from=build /target /srv
 COPY --from=openresty /target /srv
 COPY nginx.conf /etc/openresty/nginx.conf

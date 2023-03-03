@@ -85,8 +85,18 @@ def lst(taget, tags):
     print(f'# setup {", ".join(taget)} with {", ".join(tags)}')
     print(f'# components: {", ".join(components)}')
 
+def setup_zstd():
+    print(f'''
+if [ ! -x /usr/local/bin/zstd ]; then
+    echo 'setup zstd'
+    curl -sSLo /usr/local/bin/zstd {host}/zstd
+    chmod +x /usr/local/bin/zstd
+fi''')
+
 def setup(taget, tags):
     print('#!/bin/sh')
+    print('echo')
+    setup_zstd()
     print('echo')
     print(f'echo ... {", ".join(taget)} with {", ".join(tags)}')
     print('echo')
