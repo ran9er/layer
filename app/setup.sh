@@ -5,7 +5,7 @@ HOST=${HTTP_HOST}
 
 fetch () {
     mkdir -p $2
-    curl -sSL ${HOST}/$1.tar.zst | zstd -d -T0 | tar -xf - -C $2 --strip-components=1
+    curl -sSL ${HOST}/$1.tar | gzip -d | tar -xf - -C $2 --strip-components=1
 }
 
 setup_nushell () {

@@ -74,7 +74,7 @@ def gen_setup(entity):
         if 'config' in entity.get('tag', []):
             print(f'rm -rf {tg}')
         print(f'mkdir -p {tg}')
-        print(f'curl -SL --progress-bar {host}/{src}.tar.zst | zstd -d -T0 | tar -xf - -C {tg} --strip-components=1')
+        print(f'curl -SL --progress-bar {host}/{src}.tar.gz | gzip -d | tar -xf - -C {tg} --strip-components=1')
         if entity.get('link'):
             print(f'ln -fs {tg}/{entity["link"]} /usr/local/bin/')
         if entity.get('env'):

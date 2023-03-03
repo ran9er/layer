@@ -9,7 +9,7 @@ RUN set -eux \
       | tar zxf - -C /opt/language-server/phpactor --strip-components=1 \
   ; cd /opt/language-server/phpactor \
   ; COMPOSER_ALLOW_SUPERUSER=1 composer install \
-  ; tar -C /opt/language-server -cf - phpactor | zstd -T0 -19 > /opt/lsphp.tar.zst \
+  ; tar -C /opt/language-server -cf - phpactor | gzip > /opt/lsphp.tar.gz \
   ;
 
 FROM ubuntu as build
@@ -78,7 +78,7 @@ RUN set -eux \
   #; CC="/opt/musl/bin/x86_64-linux-musl-gcc -fPIE -pie" \
   #; ${PYTHON_ROOT}/bin/pip3 --no-cache-dir install --use-pep517 debugpy neovim \
   ; ${PYTHON_ROOT}/bin/pip3 --no-cache-dir install debugpy \
-  ; tar -C $(dirname $PYTHON_ROOT) -cf - $(basename $PYTHON_ROOT) | zstd -T0 -19 > $TARGET/python.tar.zst
+  ; tar -C $(dirname $PYTHON_ROOT) -cf - $(basename $PYTHON_ROOT) | gzip > $TARGET/python.tar.gz
 
 # wasmtime
 RUN set -eux \
@@ -86,7 +86,7 @@ RUN set -eux \
   ; wasmtime_url="https://github.com/bytecodealliance/wasmtime/releases/latest/download/wasmtime-${wasmtime_ver}-x86_64-linux.tar.xz" \
   ; curl -sSL ${wasmtime_url} | tar Jxf - --strip-components=1 -C $WASM_ROOT --wildcards '*/wasmtime' \
   ; find $WASM_ROOT -type f -exec grep -IL . "{}" \; | xargs -L 1 strip \
-  ; tar -C $(dirname $WASM_ROOT) -cf - $(basename $WASM_ROOT) | zstd -T0 -19 > $TARGET/wasmtime.tar.zst \
+  ; tar -C $(dirname $WASM_ROOT) -cf - $(basename $WASM_ROOT) | gzip > $TARGET/wasmtime.tar.gz \
   ;
 
 # node
@@ -103,30 +103,30 @@ RUN set -eux \
         yaml-language-server \
         neovim \
   ; npm cache clean -f \
-  ; tar -C $(dirname $NODE_ROOT) -cf - $(basename $NODE_ROOT)| zstd -T0 -19 > $TARGET/node.tar.zst \
+  ; tar -C $(dirname $NODE_ROOT) -cf - $(basename $NODE_ROOT)| gzip > $TARGET/node.tar.gz \
   \
   # lslua
   ; lslua_ver=$(curl -sSL https://api.github.com/repos/LuaLS/lua-language-server/releases/latest | jq -r '.tag_name') \
   ; lslua_url="https://github.com/LuaLS/lua-language-server/releases/latest/download/lua-language-server-${lslua_ver}-linux-x64.tar.gz" \
   ; mkdir -p $LS_ROOT/lua-language-server \
   ; curl -sSL ${lslua_url} | tar zxf - -C $LS_ROOT/lua-language-server \
-  ; tar -C $LS_ROOT -cf - lua-language-server | zstd -T0 -19 > $TARGET/lslua.tar.zst \
+  ; tar -C $LS_ROOT -cf - lua-language-server | gzip > $TARGET/lslua.tar.gz \
   \
   # lsnode
   ; git clone --depth=1 https://github.com/microsoft/vscode-node-debug2.git $LS_ROOT/vscode-node-debug2 \
   ; cd $LS_ROOT/vscode-node-debug2 \
   ; npm install \
   ; NODE_OPTIONS=--no-experimental-fetch npm run build \
-  ; tar -C $LS_ROOT -cf - vscode-node-debug2 | zstd -T0 -19 > $TARGET/lsnode.tar.zst \
+  ; tar -C $LS_ROOT -cf - vscode-node-debug2 | gzip > $TARGET/lsnode.tar.gz \
   ;
 
 # php
-COPY --from=php /opt/lsphp.tar.zst $TARGET
+COPY --from=php /opt/lsphp.tar.gz $TARGET
 RUN set -eux \
   ; git clone --depth=1 https://github.com/xdebug/vscode-php-debug.git $LS_ROOT/vscode-php-debug \
   ; cd $LS_ROOT/vscode-php-debug \
   ; npm install && npm run build \
-  ; tar -C $LS_ROOT -cf - vscode-php-debug | zstd -T0 -19 > $TARGET/phpdb.tar.zst \
+  ; tar -C $LS_ROOT -cf - vscode-php-debug | gzip > $TARGET/phpdb.tar.gz \
   ;
 
 # nushell
@@ -139,10 +139,10 @@ RUN set -eux \
   ; nu_url="https://github.com/nushell/nushell/releases/latest/download/nu-${nu_ver}-x86_64-unknown-linux-musl.tar.gz" \
   ; curl -sSL ${nu_url} | tar zxf - -C $NU_ROOT --strip-components=1 \
   ; rm -f $NU_ROOT/nu_plugin_example $NU_ROOT/README.txt $NU_ROOT/LICENSE \
-  ; tar -C $(dirname $NU_ROOT) -cf - $(basename $NU_ROOT) | zstd -T0 -19 > $TARGET/nushell.tar.zst \
+  ; tar -C $(dirname $NU_ROOT) -cf - $(basename $NU_ROOT) | gzip > $TARGET/nushell.tar.gz \
   ; git clone --depth=1 https://github.com/fj0r/nushell.git ${HOME}/.config/nushell \
   ; opwd=$PWD; cd ${HOME}/.config/nushell; git log -1 --date=iso; cd $opwd \
-  ; tar -C ${HOME}/.config -cf - nushell | zstd -T0 -19 > $TARGET/nushell.conf.tar.zst \
+  ; tar -C ${HOME}/.config -cf - nushell | gzip > $TARGET/nushell.conf.tar.gz \
   ;
 
 # utils
@@ -181,7 +181,7 @@ RUN set -eux \
   ; curl -sSL ${dust_url} | tar zxf - -C $UTILS_ROOT --strip-components=1 --wildcards '*/dust' \
   \
   ; find $UTILS_ROOT -type f -exec grep -IL . "{}" \; | xargs -L 1 strip -s \
-  ; tar -C $(dirname $UTILS_ROOT) -cf - $(basename $UTILS_ROOT) | zstd -T0 -19 > $TARGET/utils.tar.zst \
+  ; tar -C $(dirname $UTILS_ROOT) -cf - $(basename $UTILS_ROOT) | gzip > $TARGET/utils.tar.gz \
   ;
 
 # nvim
@@ -199,7 +199,7 @@ RUN set -eux \
   ; rg_url="https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep-${rg_ver}-x86_64-unknown-linux-musl.tar.gz" \
   ; curl -sSL ${rg_url} | tar zxf - -C $NVIM_ROOT/bin --strip-components=1 --wildcards '*/rg' \
   \
-  ; tar -C $(dirname $NVIM_ROOT) -cf - $(basename $NVIM_ROOT) | zstd -T0 -19 > $TARGET/nvim.tar.zst \
+  ; tar -C $(dirname $NVIM_ROOT) -cf - $(basename $NVIM_ROOT) | gzip > $TARGET/nvim.tar.gz \
   \
   ; mkdir -p ${XDG_CONFIG_HOME} \
   ; git clone --depth=1 https://github.com/fj0r/nvim-lua.git $XDG_CONFIG_HOME/nvim \
@@ -207,12 +207,12 @@ RUN set -eux \
   ; nvim --headless "+Lazy! sync" +qa \
   \
   ; rm -rf $XDG_CONFIG_HOME/nvim/lazy/packages/*/.git \
-  ; tar -C ${XDG_CONFIG_HOME} -cf - nvim | zstd -T0 -19 > $TARGET/nvim.conf.tar.zst
+  ; tar -C ${XDG_CONFIG_HOME} -cf - nvim | gzip > $TARGET/nvim.conf.tar.gz
 
 # sshd
 COPY --from=dropbear / $SSHD_ROOT
 RUN set -eux \
-  ; tar -C $(dirname $SSHD_ROOT) -cf - $(basename $SSHD_ROOT) | zstd -T0 -19 > $TARGET/sshd.tar.zst \
+  ; tar -C $(dirname $SSHD_ROOT) -cf - $(basename $SSHD_ROOT) | gzip > $TARGET/sshd.tar.gz \
   ;
 
 # mutagen
@@ -232,7 +232,7 @@ RUN set -eux \
         linux_386 linux_amd64 linux_arm linux_arm64 \
         windows_386 windows_amd64 darwin_amd64 freebsd_amd64 \
   ; rm -rf mutagen-agents \
-  ; tar -C /opt -cf - mutagen | zstd -T0 -19 > $TARGET/mutagen.tar.zst \
+  ; tar -C /opt -cf - mutagen | gzip > $TARGET/mutagen.tar.gz \
   ;
 
 # kubectl
@@ -242,7 +242,7 @@ RUN set -eux \
   ; k8s_url="https://dl.k8s.io/v${k8s_ver}/kubernetes-client-linux-amd64.tar.gz" \
   ; curl -L ${k8s_url} | tar zxf - --strip-components=3 -C /opt/kubectl kubernetes/client/bin/kubectl \
   ; chmod +x /opt/kubectl/kubectl \
-  ; tar -C /opt -cf - kubectl | zstd -T0 -19 > $TARGET/kubectl.tar.zst \
+  ; tar -C /opt -cf - kubectl | gzip > $TARGET/kubectl.tar.gz \
   ;
 
 # vscode-server
@@ -252,7 +252,7 @@ RUN set -eux \
   ; mkdir -p $VSCODE_ROOT/vscode-server/bin/${commit_id} \
   ; curl -sSL "https://update.code.visualstudio.com/commit:${commit_id}/server-linux-x64/stable" \
     | tar -zxf - -C $VSCODE_ROOT/vscode-server/bin/${commit_id} --strip-components=1 \
-  ; tar -C $VSCODE_ROOT -cf - vscode-server | zstd -T0 -19 > $TARGET/vscode-server.tar.zst \
+  ; tar -C $VSCODE_ROOT -cf - vscode-server | gzip > $TARGET/vscode-server.tar.gz \
   ;
 
 
@@ -260,7 +260,7 @@ RUN set -eux \
 FROM fj0rd/0x:latest as openresty
 RUN set -eux \
   ; mkdir -p /target \
-  ; tar -C /opt -cf - openresty | zstd -T0 -19 > /target/openresty.tar.zst
+  ; tar -C /opt -cf - openresty | gzip > /target/openresty.tar.gz
 
 FROM fj0rd/0x:or
 COPY --from=build /target /srv
