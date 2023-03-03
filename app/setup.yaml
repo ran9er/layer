@@ -92,6 +92,10 @@ manifest:
   alias: [k8s]
   source: kubectl
   target: /usr/local/bin
+- name: vector
+  alias: [log]
+  source: vector
+  target: /usr/local/bin
 - name: vscode
   alias: [vs, vscode]
   source: vscode-server

@@ -240,9 +240,19 @@ RUN set -eux \
   ; mkdir -p /opt/kubectl \
   ; k8s_ver=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt | cut -c 2-) \
   ; k8s_url="https://dl.k8s.io/v${k8s_ver}/kubernetes-client-linux-amd64.tar.gz" \
-  ; curl -L ${k8s_url} | tar zxf - --strip-components=3 -C /opt/kubectl kubernetes/client/bin/kubectl \
+  ; curl -L ${k8s_url} | tar -zxf - --strip-components=3 -C /opt/kubectl kubernetes/client/bin/kubectl \
   ; chmod +x /opt/kubectl/kubectl \
   ; tar -C /opt -cf - kubectl | zstd -T0 -19 > $TARGET/kubectl.tar.zst \
+  ;
+
+# vector
+RUN set -eux \
+  ; mkdir -p /opt/vector \
+  ; vector_ver=$(curl -sSL https://api.github.com/repos/vectordotdev/vector/releases/latest | jq -r '.tag_name' | cut -c 2-) \
+  ; vector_url="https://github.com/vectordotdev/vector/releases/latest/download/vector-${vector_ver}-x86_64-unknown-linux-musl.tar.gz" \
+  ; curl -sSL ${vector_url} | tar -zxf - -C /opt/vector --strip-components=3 ./vector-x86_64-unknown-linux-musl/bin/vector \
+  ; chmod +x /opt/vector/vector \
+  ; tar -C /opt -cf - vector | zstd -T0 -19 > $TARGET/vector.tar.zst \
   ;
 
 # vscode-server
