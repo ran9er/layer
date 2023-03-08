@@ -71,12 +71,14 @@ def gen_setup(entity):
     src = entity.get('source')
     print(f'echo "setup {name}" ')
     if tg:
+        sudo = 'sudo '
         if 'config' in entity.get('tag', []):
+            sudo = ''
             print(f'rm -rf {tg}')
-        print(f'mkdir -p {tg}')
-        print(f'curl -SL --progress-bar {host}/{src}.tar.zst | zstd -d -T0 | tar -xf - -C {tg} --strip-components=1')
+        print(f'{sudo}mkdir -p {tg}')
+        print(f'curl -SL --progress-bar {host}/{src}.tar.zst | zstd -d -T0 | {sudo}tar -xf - -C {tg} --strip-components=1')
         if entity.get('link'):
-            print(f'ln -fs {tg}/{entity["link"]} /usr/local/bin/')
+            print(f'{sudo}ln -fs {tg}/{entity["link"]} /usr/local/bin/')
         if entity.get('env'):
             for k, v in entity['env'].items():
                 print(f'echo "export {k}={v}" >> ${{HOME}}/.profile')
