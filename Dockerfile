@@ -12,7 +12,7 @@ RUN set -eux \
   ; tar -C /opt/language-server -cf - phpactor | zstd -T0 -19 > /opt/lsphp.tar.zst \
   ;
 
-FROM ubuntu as build
+FROM debian:testing-slim as build
 
 ENV TARGET=/target
 ENV NODE_ROOT=/opt/node
@@ -64,8 +64,8 @@ RUN set -eux \
           )\
   ; curl -sSL ${py_url} | tar zxf - -C ${PYTHON_ROOT} --strip-components=1 \
   #; CC="/opt/musl/bin/x86_64-linux-musl-gcc -fPIE -pie" \
-  #; ${PYTHON_ROOT}/bin/pip3 --no-cache-dir install --use-pep517 debugpy neovim \
-  ; ${PYTHON_ROOT}/bin/pip3 --no-cache-dir install debugpy \
+  #; ${PYTHON_ROOT}/bin/pip3 install --no-cache-dir --use-pep517 debugpy neovim \
+  ; ${PYTHON_ROOT}/bin/pip3 install --no-cache-dir debugpy \
   ; tar -C $(dirname $PYTHON_ROOT) -cf - $(basename $PYTHON_ROOT) | zstd -T0 -19 > $TARGET/python.tar.zst
 
 # wasmtime
@@ -277,6 +277,6 @@ RUN set -eux \
   ; ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime \
   ; echo "$TIMEZONE" > /etc/timezone \
   ; apk add --no-cache python3 py3-pip \
-  ; pip3 --no-cache-dir install pyyaml pystache \
+  ; pip3 install --no-cache-dir --prefix=/usr pyyaml pystache \
   ; echo '{}' | jq '.build="'$(date -Is)'"' > /about.json
 
