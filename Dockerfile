@@ -230,6 +230,11 @@ RUN set -eux \
   ; k8s_url="https://dl.k8s.io/v${k8s_ver}/kubernetes-client-linux-amd64.tar.gz" \
   ; curl -L ${k8s_url} | tar -zxf - --strip-components=3 -C /opt/kubectl kubernetes/client/bin/kubectl \
   ; chmod +x /opt/kubectl/kubectl \
+  \
+  ; helm_ver=$(curl -sSL https://api.github.com/repos/helm/helm/releases/latest | jq -r '.tag_name' | cut -c 2-) \
+  ; curl -L https://get.helm.sh/helm-v${helm_ver}-linux-amd64.tar.gz \
+      | tar zxvf - -C /opt/kubectl linux-amd64/helm --strip-components=1 \
+  \
   ; tar -C /opt -cf - kubectl | zstd -T0 -19 > $TARGET/kubectl.tar.zst \
   ;
 
