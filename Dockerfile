@@ -18,6 +18,7 @@ ENV TARGET=/target
 ENV NODE_ROOT=/opt/node
 ENV NVIM_ROOT=/opt/nvim
 ENV NU_ROOT=/opt/nushell
+ENV ZELLIJ_ROOT=/opt/zellij
 ENV UTILS_ROOT=/opt/utils
 ENV LS_ROOT=/opt/language-server
 ENV SSHD_ROOT=/opt/dropbear
@@ -47,6 +48,7 @@ RUN set -eux \
   ; mkdir -p $UTILS_ROOT \
   ; mkdir -p $LS_ROOT \
   ; mkdir -p $NU_ROOT \
+  ; mkdir -p $ZELLIJ_ROOT \
   ; mkdir -p $SSHD_ROOT \
   ; mkdir -p $WASM_ROOT \
   ; mkdir -p $PYTHON_ROOT \
@@ -131,6 +133,16 @@ RUN set -eux \
   ; git clone --depth=1 https://github.com/fj0r/nushell.git ${HOME}/.config/nushell \
   ; opwd=$PWD; cd ${HOME}/.config/nushell; git log -1 --date=iso; cd $opwd \
   ; tar -C ${HOME}/.config -cf - nushell | zstd -T0 -19 > $TARGET/nushell.conf.tar.zst \
+  ;
+
+# zellij
+RUN set -eux \
+  ; zellij_url="https://github.com/zellij-org/zellij/releases/latest/download/zellij-x86_64-unknown-linux-musl.tar.gz" \
+  ; curl -sSL ${zellij_url} | tar zxf - -C $ZELLIJ_ROOT \
+  ; tar -C $(dirname $ZELLIJ_ROOT) -cf - $(basename $ZELLIJ_ROOT) | zstd -T0 -19 > $TARGET/zellij.tar.zst \
+  ; git clone --depth=1 https://github.com/fj0r/zellij.git ${HOME}/.config/zellij \
+  ; opwd=$PWD; cd ${HOME}/.config/zellij; git log -1 --date=iso; cd $opwd \
+  ; tar -C ${HOME}/.config -cf - zellij | zstd -T0 -19 > $TARGET/zellij.conf.tar.zst \
   ;
 
 # utils

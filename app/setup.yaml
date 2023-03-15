@@ -18,6 +18,16 @@ manifest:
   belong: nu
   source: nushell.conf
   target: '${CONFIG_ROOT}/nushell'
+- name: zellij
+  alias: [zj]
+  source: zellij
+  target: /usr/local/bin
+- name: zjconfig
+  alias: [zj-config]
+  tag: [config]
+  belong: zellij
+  source: zellij.conf
+  target: '${CONFIG_ROOT}/zellij'
 - name: nvim
   alias: [nvim, neovim, vim]
   source: nvim
