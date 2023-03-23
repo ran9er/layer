@@ -91,8 +91,8 @@ def setup_zstd():
     print(f'''
 if [ ! -x /usr/local/bin/zstd ]; then
     echo 'setup zstd'
-    curl -sSLo /usr/local/bin/zstd {host}/zstd
-    chmod +x /usr/local/bin/zstd
+    sudo curl -sSLo /usr/local/bin/zstd {host}/zstd
+    sudo chmod +x /usr/local/bin/zstd
 fi''')
 
 def setup(taget, tags):
