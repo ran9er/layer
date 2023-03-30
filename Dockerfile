@@ -91,7 +91,6 @@ RUN set -eux \
         pyright \
         vscode-langservers-extracted \
         yaml-language-server \
-        neovim \
   ; npm cache clean -f \
   ; tar -C $(dirname $NODE_ROOT) -cf - $(basename $NODE_ROOT)| zstd -T0 -19 > $TARGET/node.tar.zst \
   \
@@ -164,7 +163,7 @@ RUN set -eux \
   ; curl -sSL ${dasel_url} | gzip -d > $UTILS_ROOT/dasel && chmod +x $UTILS_ROOT/dasel \
   \
   ; pup_ver=$(curl -sSL https://api.github.com/repos/ericchiang/pup/releases/latest | jq -r '.tag_name') \
-  ; pup_url=https://github.com/ericchiang/pup/releases/download/${pup_ver}/pup_${pup_ver}_linux_amd64.zip \
+  ; pup_url="https://github.com/ericchiang/pup/releases/download/${pup_ver}/pup_${pup_ver}_linux_amd64.zip" \
   ; curl -sSL ${pup_url} -o pup.zip && unzip pup.zip && rm -f pup.zip && chmod +x pup && mv pup $UTILS_ROOT \
   \
   ; sd_ver=$(curl -sSL https://api.github.com/repos/chmln/sd/releases/latest | jq -r '.tag_name') \
@@ -195,7 +194,7 @@ RUN set -eux \
 RUN set -eux \
   #; nvim_url=$(curl -sSL https://api.github.com/repos/neovim/neovim/releases -H 'Accept: application/vnd.github.v3+json' \
   #           | jq -r '[.[]|select(.prerelease==false)][0].assets[].browser_download_url' | grep -v sha256sum | grep linux64.tar.gz) \
-  ; nvim_url=https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz \
+  ; nvim_url="https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz" \
   ; curl -sSL ${nvim_url} | tar zxf - -C $NVIM_ROOT --strip-components=1 \
   \
   ; fd_ver=$(curl -sSL https://api.github.com/repos/sharkdp/fd/releases/latest | jq -r '.tag_name') \
