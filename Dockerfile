@@ -157,10 +157,10 @@ RUN set -eux \
   \
   ; echo "download yq in $(pwd)" \
   ; yq_url="https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64.tar.gz" \
-  ; curl -sSL ${yq_url} | tar zxf - && mv yq_linux_amd64 $UTILS_ROOT/yq \
+  ; curl -sSL ${yq_url} | tar zxf - ./yq_linux_amd64 && mv yq_linux_amd64 $UTILS_ROOT/yq \
   \
-  ; dasel_url="https://github.com/TomWright/dasel/releases/latest/download/dasel_linux_amd64.gz" \
-  ; curl -sSL ${dasel_url} | gzip -d > $UTILS_ROOT/dasel && chmod +x $UTILS_ROOT/dasel \
+  #; dasel_url="https://github.com/TomWright/dasel/releases/latest/download/dasel_linux_amd64.gz" \
+  #; curl -sSL ${dasel_url} | gzip -d > $UTILS_ROOT/dasel && chmod +x $UTILS_ROOT/dasel \
   \
   ; xh_ver=$(curl -sSL https://api.github.com/repos/ducaale/xh/releases/latest | jq -r '.tag_name') \
   ; xh_url="https://github.com/ducaale/xh/releases/latest/download/xh-${xh_ver}-x86_64-unknown-linux-musl.tar.gz" \
