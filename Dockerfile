@@ -17,6 +17,7 @@ FROM debian:testing-slim as build
 ENV TARGET=/target
 ENV NODE_ROOT=/opt/node
 ENV NVIM_ROOT=/opt/nvim
+ENV NVIM_MUSL=1
 ENV NU_ROOT=/opt/nushell
 ENV ZELLIJ_ROOT=/opt/zellij
 ENV UTILS_ROOT=/opt/utils
@@ -39,7 +40,8 @@ RUN set -eux \
         curl gnupg ca-certificates \
         zstd xz-utils unzip tree \
         jq ripgrep git build-essential \
-        #musl musl-dev musl-tools \
+        musl-dev musl-tools \
+  ; ln -s /usr/bin/g++ /usr/bin/musl-g++ \
   ; apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* \
   \
   ; mkdir -p ${TARGET} \
