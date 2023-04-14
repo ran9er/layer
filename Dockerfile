@@ -289,7 +289,7 @@ FROM fj0rd/scratch:zstd as zstd
 FROM fj0rd/0x:latest as openresty
 RUN set -eux \
   ; mkdir -p /target \
-  ; tar -C /opt -cf - openresty | zstd -T0 -19 > /target/openresty.tar.zst
+  ; tar -C /usr/local -cf - openresty | zstd -T0 -19 > /target/openresty.tar.zst
 
 FROM fj0rd/0x:or
 COPY --from=zstd /usr/local/bin/zstd /srv

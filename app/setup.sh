@@ -44,7 +44,7 @@ setup_wasm() {
 
 setup_openresty() {
     echo --- setup openresty
-    fetch openresty /opt/openresty
+    fetch openresty /usr/local/openresty
     mkdir -p /var/log/openresty
     echo --- done
 }

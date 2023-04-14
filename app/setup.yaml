@@ -45,7 +45,7 @@ manifest:
 - name: openresty
   alias: [or, openresty]
   source: openresty
-  target: /opt/openresty
+  target: /usr/local/openresty
 - name: node
   alias: [node, nodejs, lsyaml, lsjson]
   source: node
