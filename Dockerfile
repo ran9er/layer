@@ -17,7 +17,7 @@ FROM debian:testing-slim as build
 ENV TARGET=/target
 ENV NODE_ROOT=/opt/node
 ENV NVIM_ROOT=/opt/nvim
-ENV NVIM_MUSL=1
+#ENV NVIM_MUSL=1
 ENV NU_ROOT=/opt/nushell
 ENV ZELLIJ_ROOT=/opt/zellij
 ENV UTILS_ROOT=/opt/utils
