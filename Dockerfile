@@ -2,14 +2,15 @@ FROM fj0rd/scratch:dropbear as dropbear
 FROM fj0rd/scratch:dog as dog
 
 FROM fj0rd/0x:php8 as php
+ENV LS_ROOT=/opt/language-server
 RUN set -eux \
-  ; mkdir -p /opt/language-server/phpactor \
+  ; mkdir -p ${LS_ROOT}/phpactor \
   ; phpactor_ver=$(curl -sSL https://api.github.com/repos/phpactor/phpactor/releases/latest | jq -r '.tag_name') \
   ; curl -sSL https://github.com/phpactor/phpactor/archive/refs/tags/${phpactor_ver}.tar.gz \
-      | tar zxf - -C /opt/language-server/phpactor --strip-components=1 \
-  ; cd /opt/language-server/phpactor \
+      | tar zxf - -C ${LS_ROOT}/phpactor --strip-components=1 \
+  ; cd ${LS_ROOT}/phpactor \
   ; COMPOSER_ALLOW_SUPERUSER=1 composer install \
-  ; tar -C /opt/language-server -cf - phpactor | zstd -T0 -19 > /opt/lsphp.tar.zst \
+  ; tar -C ${LS_ROOT} -cf - phpactor | zstd -T0 -19 > /opt/lsphp.tar.zst \
   ;
 
 FROM debian:testing-slim as build
@@ -296,7 +297,6 @@ COPY --from=zstd /usr/local/bin/zstd /srv
 COPY --from=build /target /srv
 COPY --from=openresty /target /srv
 COPY nginx.conf /etc/openresty/nginx.conf
-#COPY setup.sh /srv
 COPY app /app
 RUN set -eux \
   ; ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime \
