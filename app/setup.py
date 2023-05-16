@@ -3,8 +3,10 @@ from pathlib import Path
 import re
 import sys, os
 
+# export LAYER_SETUP_ARGS='./setup.py ./setup.yaml setup http://localhost:8080 nvim,nu,config,only'
 # python3 ./setup.py ./setup.yaml setup http://localhost:8080 python,nvim
-input = sys.argv
+mock = os.environ.get('LAYER_SETUP_ARGS')
+input = mock and mock.split(' ') or sys.argv
 
 action = input[2]
 file = Path(input[1])
@@ -38,6 +40,7 @@ target = set()
 components = set()
 tags = set()
 requires = set()
+config_only = set()
 
 for a in arg:
     if a in component_tag:
@@ -62,6 +65,8 @@ for i in target:
             m = deref(x)
             if set(m['tag']).intersection(tags):
                 components.add(x)
+                if 'config_only' in tags and 'config' in m['tag']:
+                    config_only.add(x)
                 coll_deps(m)
 
 
@@ -105,15 +110,20 @@ def setup(taget, tags):
     print('set -eu')
     print('CONFIG_ROOT=${XDG_CONFIG_HOME:-$HOME/.config}')
     lst = []
-    for i in requires:
-        if not i in lst:
-            lst.append(i)
-    for i in components:
-        if not i in lst:
-            lst.append(i)
-    for i in target:
-        if not i in lst:
-            lst.append(i)
+    if 'config_only' in tags:
+        for i in config_only:
+            if not i in lst:
+                lst.append(i)
+    else:
+        for i in requires:
+            if not i in lst:
+                lst.append(i)
+        for i in components:
+            if not i in lst:
+                lst.append(i)
+        for i in target:
+            if not i in lst:
+                lst.append(i)
     for i in lst:
         gen_setup(deref(i))
     print(f'# manifests: {", ".join(lst)}')
@@ -157,6 +167,7 @@ china_mirrors() {
 
 china_mirrors
 '''
+
 if action == 'list':
     lst(target, tags)
 elif action == 'setup':

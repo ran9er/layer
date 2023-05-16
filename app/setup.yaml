@@ -2,6 +2,9 @@ component_tag:
   - - config
     - conf
     - cfg
+  - - config_only
+    - only
+    - co
   - - language-server
     - ls
     - lsp
@@ -14,7 +17,7 @@ manifest:
   target: /usr/local/bin
 - name: nuconfig
   alias: [nu-config]
-  tag: [config]
+  tag: [config, config_only]
   belong: nu
   source: nushell.conf
   target: '${CONFIG_ROOT}/nushell'
@@ -24,7 +27,7 @@ manifest:
   target: /usr/local/bin
 - name: zjconfig
   alias: [zj-config]
-  tag: [config]
+  tag: [config, config_only]
   belong: zellij
   source: zellij.conf
   target: '${CONFIG_ROOT}/zellij'
@@ -34,7 +37,7 @@ manifest:
   target: /usr/local
 - name: nvimconfig
   alias: [nvim-config]
-  tag: [config]
+  tag: [config, config_only]
   belong: nvim
   source: nvim.conf
   target: '${CONFIG_ROOT}/nvim'
