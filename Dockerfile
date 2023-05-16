@@ -61,10 +61,11 @@ RUN set -eux \
 # python
 ARG PYTHON_VERSION=3.11
 ARG COMMITMSG
-RUN set -eux \
+RUN set -x \
   ; py_build=$(curl -sSL https://api.github.com/repos/indygreg/python-build-standalone/releases | jq -r '.[0].tag_name') \
-  ; py_buildmsg=$(echo ${COMMITMSG} | rg 'py_build=([^\s]+)' -or '$1') \
-  ; py_url=$(curl -sSL https://api.github.com/repos/indygreg/python-build-standalone/releases/tags/${py_buildmsg:-${py_build}} \
+  ; py_buildmsg=$(echo "${COMMITMSG}" | rg 'py_build=([^\s]+)' -or '$1') \
+  ; py_build=${py_buildmsg:-${py_build}} \
+  ; py_url=$(curl -sSL https://api.github.com/repos/indygreg/python-build-standalone/releases/tags/${py_build} \
           | jq -r '.assets[].browser_download_url' \
           | grep -v sha256 \
           | grep x86_64-unknown-linux-musl-install_only \
