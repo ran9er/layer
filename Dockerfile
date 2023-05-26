@@ -13,7 +13,7 @@ RUN set -eux \
   ; tar -C ${LS_ROOT} -cf - phpactor | zstd -T0 -19 > /opt/lsphp.tar.zst \
   ;
 
-FROM debian:testing-slim as build
+FROM ubuntu:latest as build
 
 ENV TARGET=/target
 ENV NODE_ROOT=/opt/node
