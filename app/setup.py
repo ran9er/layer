@@ -76,14 +76,12 @@ def gen_setup(entity):
     src = entity.get('source')
     print(f'echo "setup {name}" ')
     if tg:
-        sudo = 'sudo '
         if 'config' in entity.get('tag', []):
-            sudo = ''
             print(f'rm -rf {tg}')
-        print(f'{sudo}mkdir -p {tg}')
-        print(f'curl -SL --progress-bar {host}/{src}.tar.zst | zstd -d -T0 | {sudo}tar -xf - -C {tg} --strip-components=1')
+        print(f'$SUDO mkdir -p {tg}')
+        print(f'curl -SL --progress-bar {host}/{src}.tar.zst | zstd -d -T0 | $SUDO tar -xf - -C {tg} --strip-components=1')
         if entity.get('link'):
-            print(f'{sudo}ln -fs {tg}/{entity["link"]} /usr/local/bin/')
+            print(f'$SUDO ln -fs {tg}/{entity["link"]} /usr/local/bin/')
         if entity.get('env'):
             for k, v in entity['env'].items():
                 print(f'echo "export {k}={v}" >> ${{HOME}}/.profile')
@@ -96,8 +94,8 @@ def setup_zstd():
     print(f'''
 if [ ! -x /usr/local/bin/zstd ]; then
     echo 'setup zstd'
-    sudo curl -sSLo /usr/local/bin/zstd {host}/zstd
-    sudo chmod +x /usr/local/bin/zstd
+    $SUDO curl -sSLo /usr/local/bin/zstd {host}/zstd
+    $SUDO chmod +x /usr/local/bin/zstd
 fi''')
 
 def setup(taget, tags):
@@ -109,6 +107,8 @@ def setup(taget, tags):
     print('echo')
     print('set -eu')
     print('CONFIG_ROOT=${XDG_CONFIG_HOME:-$HOME/.config}')
+    print("SUDO=''")
+    print("if [ `id -u` = 0 ]; then SUDO='sudo'; fi")
     lst = []
     if 'config_only' in tags:
         for i in config_only:
