@@ -162,6 +162,10 @@ RUN set -eux \
   ; fd_url="https://github.com/sharkdp/fd/releases/latest/download/fd-${fd_ver}-x86_64-unknown-linux-musl.tar.gz" \
   ; curl -sSL ${fd_url} | tar zxf - -C $UTILS_ROOT --strip-components=1 --wildcards '*/fd' \
   \
+  ; templar_ver=$(curl -sSL https://api.github.com/repos/proctorlabs/templar/releases/latest | jq -r '.tag_name') \
+  ; templar_url="https://github.com/proctorlabs/templar/releases/download/${templar_ver}/templar-x86_64-unknown-linux-musl.tar.xz" \
+  ; curl -sSL ${templar_url} | tar Jxf - -C $UTILS_ROOT \
+  \
   ; echo "download yq in $(pwd)" \
   ; yq_url="https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64.tar.gz" \
   ; curl -sSL ${yq_url} | tar zxf - ./yq_linux_amd64 && mv yq_linux_amd64 $UTILS_ROOT/yq \
