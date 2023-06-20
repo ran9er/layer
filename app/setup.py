@@ -100,6 +100,8 @@ fi''')
 
 def setup(taget, tags):
     print('#!/bin/sh')
+    print("SUDO=''")
+    print("if [ `id -u` != 0 ]; then SUDO='sudo'; fi")
     print('echo')
     setup_zstd()
     print('echo')
@@ -107,8 +109,6 @@ def setup(taget, tags):
     print('echo')
     print('set -eu')
     print('CONFIG_ROOT=${XDG_CONFIG_HOME:-$HOME/.config}')
-    print("SUDO=''")
-    print("if [ `id -u` = 0 ]; then SUDO='sudo'; fi")
     lst = []
     if 'config_only' in tags:
         for i in config_only:
