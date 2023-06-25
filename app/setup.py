@@ -99,7 +99,7 @@ if [ ! -x /usr/local/bin/zstd ]; then
 fi''')
 
 def setup(taget, tags):
-    print('#!/bin/sh')
+    print('#!/usr/bin/env bash')
     print("SUDO=''")
     print("if [ `id -u` != 0 ]; then SUDO='sudo'; fi")
     print('echo')
