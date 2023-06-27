@@ -302,7 +302,7 @@ FROM fj0rd/0x:or
 COPY --from=zstd /usr/local/bin/zstd /srv
 COPY --from=build /target /srv
 COPY --from=openresty /target /srv
-COPY nginx.conf /etc/openresty/nginx.conf
+COPY setup.nginx.conf /etc/openresty/ext/setup.conf
 COPY app /app
 RUN set -eux \
   ; ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime \
