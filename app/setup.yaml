@@ -109,8 +109,8 @@ manifest:
   alias: [log]
   source: vector
   target: /usr/local/bin
-- name: vscode
-  alias: [vs, vscode]
-  source: vscode-server
-  target: '${HOME}/.vscode-server'
+- name: code
+  alias: [vscode, code-server]
+  source: code-server
+  target: '/opt/code-server'
 
