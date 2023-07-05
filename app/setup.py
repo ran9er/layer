@@ -78,8 +78,11 @@ def gen_setup(entity):
     if tg:
         if 'config' in entity.get('tag', []):
             print(f'rm -rf {tg}')
-        print(f'$SUDO mkdir -p {tg}')
-        print(f'curl -SL --progress-bar {host}/{src}.tar.zst | zstd -d -T0 | $SUDO tar -xf - -C {tg} --strip-components=1')
+            print(f'mkdir -p {tg}')
+            print(f'curl -SL --progress-bar {host}/{src}.tar.zst | zstd -d -T0 | tar -xf - -C {tg} --strip-components=1')
+        else:
+            print(f'$SUDO mkdir -p {tg}')
+            print(f'curl -SL --progress-bar {host}/{src}.tar.zst | zstd -d -T0 | $SUDO tar -xf - -C {tg} --strip-components=1')
         if entity.get('link'):
             print(f'$SUDO ln -fs {tg}/{entity["link"]} /usr/local/bin/')
         if entity.get('env'):
