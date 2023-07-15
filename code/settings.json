@@ -1,0 +1,19 @@
+{
+    "terminal.integrated.allowChords": false,
+    "terminal.integrated.sendKeybindingsToShell": true,
+    "diffEditor.codeLens": true,
+    "diffEditor.diffAlgorithm": "advanced",
+    "diffEditor.experimental.useVersion2": true,
+    "editor.fontFamily": "'JetBrainsMono', 'monospace', monospace",
+    "editor.fontLigatures": true,
+    "editor.minimap.autohide": true,
+    "editor.minimap.enabled": false,
+    "files.autoSave": "onFocusChange",
+    "files.autoGuessEncoding": true,
+    "files.simpleDialog.enable": true,
+    "rust-client.engine": "rust-analyzer",
+    "editor.renderWhitespace": "trailing",
+    "vscode-neovim.mouseSelectionStartVisualMode": false,
+    "vscode-neovim.neovimInitVimPaths.linux": "/etc/nvim/init.lua",
+    "workbench.colorTheme": "Monokai"
+}
