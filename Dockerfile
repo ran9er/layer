@@ -74,7 +74,7 @@ RUN set -x \
           )\
   ; curl --retry 3 -sSL ${py_url} | tar zxf - -C ${PYTHON_ROOT} --strip-components=1 \
   #; CC="/opt/musl/bin/x86_64-linux-musl-gcc -fPIE -pie" \
-  #; ${PYTHON_ROOT}/bin/pip3 install --no-cache-dir --use-pep517 debugpy neovim \
+  #; ${PYTHON_ROOT}/bin/pip3 install --no-cache-dir --use-pep517 debugpy \
   ; ${PYTHON_ROOT}/bin/pip3 install --no-cache-dir debugpy \
   ; tar -C $(dirname $PYTHON_ROOT) -cf - $(basename $PYTHON_ROOT) | zstd -T0 -19 > $TARGET/python.tar.zst
 
