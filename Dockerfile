@@ -89,7 +89,7 @@ RUN set -eux \
 
 # node
 RUN set -eux \
-  ; node_version=$(curl --retry 3 -sSL https://nodejs.org/node-releases-data.json | jq -r '[.[] | select (has("ltsStart")) | .ltsStart |= (.| strptime("%Y-%m-%d") | mktime) | select (.ltsStart < now)][0].version') \
+  ; node_version=$(curl --retry 3 -sSL https://nodejs.org/en/download/ | rg 'Latest LTS Version.*<strong>(.+)</strong>' -or '$1') \
   ; curl --retry 3 -sSL https://nodejs.org/dist/v${node_version}/node-v${node_version}-linux-x64.tar.xz \
     | tar Jxf - --strip-components=1 -C $NODE_ROOT \
   \
