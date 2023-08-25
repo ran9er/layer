@@ -14,7 +14,7 @@ RUN set -eux \
   ; tar -C ${LS_ROOT} -cf - phpactor | zstd -T0 -19 > /opt/lsphp.tar.zst \
   ;
 
-FROM ubuntu:latest as build
+FROM debian:bookworm-slim as build
 
 ENV TARGET=/target
 ENV NODE_ROOT=/opt/node
