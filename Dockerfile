@@ -171,10 +171,6 @@ RUN set -eux \
   #; dasel_url="https://github.com/TomWright/dasel/releases/latest/download/dasel_linux_amd64.gz" \
   #; curl --retry 3 -sSL ${dasel_url} | gzip -d > $UTILS_ROOT/dasel && chmod +x $UTILS_ROOT/dasel \
   \
-  ; pup_ver=$(curl --retry 3 -sSL https://api.github.com/repos/ericchiang/pup/releases/latest | jq -r '.tag_name') \
-  ; pup_url="https://github.com/ericchiang/pup/releases/download/${pup_ver}/pup_${pup_ver}_linux_amd64.zip" \
-  ; curl --retry 3 -sSL ${pup_url} -o pup.zip && unzip pup.zip && rm -f pup.zip && chmod +x pup && mv pup $UTILS_ROOT \
-  \
   ; sd_ver=$(curl --retry 3 -sSL https://api.github.com/repos/chmln/sd/releases/latest | jq -r '.tag_name') \
   ; echo "download sd ${sd_ver} in $(pwd)" \
   ; sd_url="https://github.com/chmln/sd/releases/latest/download/sd-${sd_ver}-x86_64-unknown-linux-musl" \
