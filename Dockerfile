@@ -171,11 +171,6 @@ RUN set -eux \
   #; dasel_url="https://github.com/TomWright/dasel/releases/latest/download/dasel_linux_amd64.gz" \
   #; curl --retry 3 -sSL ${dasel_url} | gzip -d > $UTILS_ROOT/dasel && chmod +x $UTILS_ROOT/dasel \
   \
-  ; xh_ver=$(curl --retry 3 -sSL https://api.github.com/repos/ducaale/xh/releases/latest | jq -r '.tag_name') \
-  ; xh_url="https://github.com/ducaale/xh/releases/latest/download/xh-${xh_ver}-x86_64-unknown-linux-musl.tar.gz" \
-  ; curl --retry 3 -sSL ${xh_url} | tar zxf - -C ${UTILS_ROOT} --strip-components=1 --wildcards '*/xh' \
-  ; ln -sr ${UTILS_ROOT}/xh ${UTILS_ROOT}/xhs \
-  \
   ; pup_ver=$(curl --retry 3 -sSL https://api.github.com/repos/ericchiang/pup/releases/latest | jq -r '.tag_name') \
   ; pup_url="https://github.com/ericchiang/pup/releases/download/${pup_ver}/pup_${pup_ver}_linux_amd64.zip" \
   ; curl --retry 3 -sSL ${pup_url} -o pup.zip && unzip pup.zip && rm -f pup.zip && chmod +x pup && mv pup $UTILS_ROOT \
