@@ -134,8 +134,7 @@ RUN set -eux \
   \
   ; nu_ver=$(curl --retry 3 -sSL https://api.github.com/repos/nushell/nushell/releases/latest | jq -r '.tag_name') \
   ; nu_url="https://github.com/nushell/nushell/releases/latest/download/nu-${nu_ver}-x86_64-unknown-linux-musl.tar.gz" \
-  ; curl --retry 3 -sSL ${nu_url} | tar zxf - -C $NU_ROOT --strip-components=1 \
-  ; rm -f $NU_ROOT/nu_plugin_example $NU_ROOT/README.txt $NU_ROOT/LICENSE \
+  ; curl --retry 3 -sSL ${nu_url} | tar zxf - -C $NU_ROOT --strip-components=1 --wildcards '*/nu' '*/nu_plugin_query' \
   ; tar -C $(dirname $NU_ROOT) -cf - $(basename $NU_ROOT) | zstd -T0 -19 > $TARGET/nushell.tar.zst \
   ; git clone --depth=1 https://github.com/fj0r/nushell.git ${HOME}/.config/nushell \
   ; opwd=$PWD; cd ${HOME}/.config/nushell; git log -1 --date=iso; cd $opwd \
