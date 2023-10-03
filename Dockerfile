@@ -63,7 +63,7 @@ RUN set -eux \
 ARG PYTHON_VERSION=3.11
 ARG COMMITMSG
 RUN set -x \
-  ; py_build=$(curl --retry 3 -sSL https://api.github.com/repos/indygreg/python-build-standalone/releases | jq -r '.[0].tag_name') \
+  ; py_build=$(curl --retry 3 -sSL https://api.github.com/repos/indygreg/python-build-standalone/releases | jq -r '[.[]|select(.prerelease == false)][0].tag_name') \
   ; py_buildmsg=$(echo "${COMMITMSG}" | rg 'py_build=([^\s]+)' -or '$1') \
   ; py_build=${py_buildmsg:-${py_build}} \
   ; py_url=$(curl --retry 3 -sSL https://api.github.com/repos/indygreg/python-build-standalone/releases/tags/${py_build} \
