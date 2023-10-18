@@ -98,7 +98,6 @@ RUN set -eux \
         quicktype \
         pyright \
         vscode-langservers-extracted \
-        sql-language-server \
         yaml-language-server \
   ; npm cache clean -f \
   ; tar -C $(dirname $NODE_ROOT) -cf - $(basename $NODE_ROOT)| zstd -T0 -19 > $TARGET/node.tar.zst \
@@ -180,7 +179,7 @@ RUN set -eux \
   ; just_url="https://github.com/casey/just/releases/latest/download/just-${just_ver}-x86_64-unknown-linux-musl.tar.gz" \
   ; curl --retry 3 -sSL ${just_url} | tar zxf - -C $UTILS_ROOT just \
   \
-  ; mask_ver=$(curl --retry 3 -sSL https://api.github.com/repos/jacobdeichert/mask/releases/latest | jq -r '.tag_name') \
+  ; mask_ver=$(curl --retry 3 -sSL https://api.github.com/repos/jacobdeichert/mask/releases/latest | jq -r '.tag_name' | awk -F '/' '{print $2}') \
   ; mask_dir="mask-${mask_ver}-x86_64-unknown-linux-musl" \
   ; mask_url="https://github.com/jacobdeichert/mask/releases/latest/download/${mask_dir}.zip" \
   ; curl --retry 3 -sSLO ${mask_url} \
