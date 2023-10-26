@@ -26,6 +26,7 @@ ENV UTILS_ROOT=/opt/utils
 ENV LS_ROOT=/opt/language-server
 ENV SSHD_ROOT=/opt/dropbear
 ENV WASM_ROOT=/opt/wasmtime
+ENV SPIN_ROOT=/opt/spin
 ENV PYTHON_ROOT=/opt/python
 ENV VSCODE_ROOT=/opt/vscode
 ENV PATH=${NODE_ROOT}/bin:${NVIM_ROOT}/bin:$PATH
@@ -55,6 +56,7 @@ RUN set -eux \
   ; mkdir -p $ZELLIJ_ROOT \
   ; mkdir -p $SSHD_ROOT \
   ; mkdir -p $WASM_ROOT \
+  ; mkdir -p $SPIN_ROOT \
   ; mkdir -p $PYTHON_ROOT \
   ; mkdir -p $VSCODE_ROOT \
   ;
@@ -85,6 +87,15 @@ RUN set -eux \
   ; curl --retry 3 -sSL ${wasmtime_url} | tar Jxf - --strip-components=1 -C $WASM_ROOT --wildcards '*/wasmtime' \
   ; find $WASM_ROOT -type f -exec grep -IL . "{}" \; | xargs -L 1 strip \
   ; tar -C $(dirname $WASM_ROOT) -cf - $(basename $WASM_ROOT) | zstd -T0 -19 > $TARGET/wasmtime.tar.zst \
+  ;
+
+# spin
+RUN set -eux \
+  ; spin_ver=$(curl --retry 3 -sSL https://api.github.com/repos/fermyon/spin/releases/latest | jq -r '.tag_name') \
+  ; spin_url="https://github.com/fermyon/spin/releases/download/${spin_ver}/spin-${spin_ver}-linux-amd64.tar.gz" \
+  ; curl --retry 3 -sSL ${spin_url} | tar zxf - -C $SPIN_ROOT spin \
+  ; find $SPIN_ROOT -type f -exec grep -IL . "{}" \; | xargs -L 1 strip \
+  ; tar -C $(dirname $SPIN_ROOT) -cf - $(basename $SPIN_ROOT) | zstd -T0 -19 > $TARGET/spin.tar.zst \
   ;
 
 # node

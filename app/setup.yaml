@@ -45,6 +45,10 @@ manifest:
   alias: [wasmtime]
   source: wasmtime
   target: /usr/local/bin
+- name: spin
+  alias: [spin]
+  source: spin
+  target: /usr/local/bin
 - name: openresty
   alias: [or, openresty]
   source: openresty
