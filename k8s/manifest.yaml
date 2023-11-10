@@ -1,0 +1,67 @@
+dufs:
+  url: https://api.github.com/repos/sigoden/dufs/releases/latest
+  get:
+  - tag_name
+  - trim
+  from: https://github.com/sigoden/dufs/releases/download/{}/dufs-{}-x86_64-unknown-linux-musl.tar.gz
+crio:
+  url: https://api.github.com/repos/cri-o/cri-o/releases/latest
+  get:
+  - tag_name
+  - slice2
+  - trim
+  from: https://storage.googleapis.com/cri-o/artifacts/cri-o.amd64.v{}.tar.gz
+nerd:
+  url: https://api.github.com/repos/containerd/nerdctl/releases/latest
+  from: https://github.com/containerd/nerdctl/releases/download/v{}/nerdctl-full-{}-linux-amd64.tar.gz
+  get:
+  - tag_name
+  - slice2
+  - trim
+k8s:
+  url: https://dl.k8s.io/release/stable.txt
+  get:
+  - slice2
+  - trim
+  from: https://dl.k8s.io/v{}/kubernetes-node-linux-amd64.tar.gz
+  to: kubernetes-node-linux-amd64-{}.tar.gz
+istio:
+  url: https://api.github.com/repos/istio/istio/releases/latest
+  get:
+  - tag_name
+  - trim
+  from: https://github.com/istio/istio/releases/download/{}/istioctl-{}-linux-amd64.tar.gz
+  to: istio-{}-linux-amd64.tar.gz
+crictl:
+  url: https://api.github.com/repos/kubernetes-sigs/cri-tools/releases/latest
+  get:
+  - tag_name
+  - trim
+  from: https://github.com/kubernetes-sigs/cri-tools/releases/download/{}/crictl-{}-linux-amd64.tar.gz
+helm:
+  url: https://api.github.com/repos/helm/helm/releases/latest
+  get:
+  - tag_name
+  - trim
+  from: https://get.helm.sh/helm-{}-linux-amd64.tar.gz
+#cilium:
+#  url: https://api.github.com/repos/cilium/cilium/releases/latest
+#  to: cilium-linux-amd64_{}.tar.gz
+#  get:
+#  - tag_name
+#  - slice2
+#  - trim
+k8s_image:
+  url: https://dl.k8s.io/release/stable.txt
+  get:
+  - slice2
+  - trim
+  to: kube-system_{}.tar.zst
+flannel:
+  to: flannel-{}.tar.xz
+reloader:
+  to: reloader-{}.tar.xz
+metrics:
+  to: metrics-server_{}.tar.xz
+cert_manager:
+  to: cert-manager_{}.tar.zst

@@ -143,7 +143,7 @@ RUN set -eux \
   ; nu_url="https://github.com/nushell/nushell/releases/latest/download/nu-${nu_ver}-x86_64-unknown-linux-musl.tar.gz" \
   ; curl --retry 3 -sSL ${nu_url} | tar zxf - -C $NU_ROOT --strip-components=1 --wildcards '*/nu' '*/nu_plugin_query' \
   ; tar -C $(dirname $NU_ROOT) -cf - $(basename $NU_ROOT) | zstd -T0 -19 > $TARGET/nushell.tar.zst \
-  ; git clone --depth=1 https://github.com/fj0r/nushell.git ${HOME}/.config/nushell \
+  ; git clone --depth=3 https://github.com/fj0r/nushell.git ${HOME}/.config/nushell \
   ; opwd=$PWD; cd ${HOME}/.config/nushell; git log -1 --date=iso; cd $opwd \
   ; tar -C ${HOME}/.config -cf - nushell | zstd -T0 -19 > $TARGET/nushell.conf.tar.zst \
   ;
@@ -153,7 +153,7 @@ RUN set -eux \
   ; zellij_url="https://github.com/zellij-org/zellij/releases/latest/download/zellij-x86_64-unknown-linux-musl.tar.gz" \
   ; curl --retry 3 -sSL ${zellij_url} | tar zxf - -C $ZELLIJ_ROOT \
   ; tar -C $(dirname $ZELLIJ_ROOT) -cf - $(basename $ZELLIJ_ROOT) | zstd -T0 -19 > $TARGET/zellij.tar.zst \
-  ; git clone --depth=1 https://github.com/fj0r/zellij.git ${HOME}/.config/zellij \
+  ; git clone --depth=3 https://github.com/fj0r/zellij.git ${HOME}/.config/zellij \
   ; opwd=$PWD; cd ${HOME}/.config/zellij; git log -1 --date=iso; cd $opwd \
   ; tar -C ${HOME}/.config -cf - zellij | zstd -T0 -19 > $TARGET/zellij.conf.tar.zst \
   ;
@@ -326,7 +326,7 @@ RUN set -eux \
 
 #------
 FROM fj0rd/scratch:zstd as zstd
-FROM fj0rd/0x:latest as openresty
+FROM fj0rd/0x:openresty as openresty
 RUN set -eux \
   ; mkdir -p /target \
   ; tar -C /usr/local -cf - openresty | zstd -T0 -19 > /target/openresty.tar.zst
