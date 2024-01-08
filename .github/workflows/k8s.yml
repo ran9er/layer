@@ -7,7 +7,7 @@ name: layers
 
 on:
   push:
-    branches: [ main, k8s ]
+    branches: [ k8s ]
   workflow_dispatch:
     inputs: {}
 
