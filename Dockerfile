@@ -330,6 +330,6 @@ RUN set -eux \
   ; ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime \
   ; echo "$TIMEZONE" > /etc/timezone \
   ; apk add --no-cache python3 py3-pip \
-  ; pip3 install --no-cache-dir pyyaml pystache \
+  ; pip3 install --break-system-packages --no-cache-dir pyyaml pystache \
   ; echo '{}' | jq '.build="'$(date -Is)'"' > /about.json
 
