@@ -175,12 +175,6 @@ RUN set -eux \
   ; just_url="https://github.com/casey/just/releases/latest/download/just-${just_ver}-x86_64-unknown-linux-musl.tar.gz" \
   ; curl --retry 3 -sSL ${just_url} | tar zxf - -C $UTILS_ROOT just \
   \
-  ; mask_ver=$(curl --retry 3 -sSL https://api.github.com/repos/jacobdeichert/mask/releases/latest | jq -r '.tag_name' | awk -F '/' '{print $2}') \
-  ; mask_dir="mask-${mask_ver}-x86_64-unknown-linux-musl" \
-  ; mask_url="https://github.com/jacobdeichert/mask/releases/latest/download/${mask_dir}.zip" \
-  ; curl --retry 3 -sSLO ${mask_url} \
-  ; unzip ${mask_dir}.zip; mv ${mask_dir}/mask $UTILS_ROOT; rm -rf ${mask_dir}.zip ${mask_dir}/ \
-  \
   ; watchexec_ver=$(curl --retry 3 -sSL https://api.github.com/repos/watchexec/watchexec/releases/latest  | jq -r '.tag_name' | cut -c 2-) \
   ; watchexec_url="https://github.com/watchexec/watchexec/releases/latest/download/watchexec-${watchexec_ver}-x86_64-unknown-linux-gnu.tar.xz" \
   ; curl --retry 3 -sSL ${watchexec_url} | tar Jxf - --strip-components=1 -C $UTILS_ROOT --wildcards '*/watchexec' \
