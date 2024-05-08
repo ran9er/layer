@@ -41,7 +41,7 @@ RUN set -eux \
   ; apt-get install -y --no-install-recommends \
         curl gnupg ca-certificates \
         zstd xz-utils unzip tree \
-        jq ripgrep git build-essential \
+        jq ripgrep git build-essential cmake \
         musl-dev musl-tools \
   ; ln -s /usr/bin/g++ /usr/bin/musl-g++ \
   ; apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* \
@@ -215,6 +215,7 @@ RUN set -eux \
   ; git clone --depth=1 https://github.com/fj0r/nvim-lua.git $XDG_CONFIG_HOME/nvim \
   ; opwd=$PWD; cd $XDG_CONFIG_HOME/nvim; git log -1 --date=iso; cd $opwd \
   ; nvim --headless "+Lazy! sync" +qa \
+  #; nvim --headless "+Lazy! build telescope-fzf-native.nvim" +qa \
   \
   ; rm -rf $XDG_CONFIG_HOME/nvim/lazy/packages/*/.git \
   ; tar -C ${XDG_CONFIG_HOME} -cf - nvim | zstd -T0 -19 > $TARGET/nvim.conf.tar.zst
