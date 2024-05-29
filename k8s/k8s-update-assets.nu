@@ -1,5 +1,5 @@
 def comp [context: string, offset: int] {
-    let size = $context | str substring 0..$offset | split row ' ' | length
+    let size = $context | str substring 0..<$offset | split row ' ' | length
     if $size < 3 {
         ['update' 'pull' 'push' 'sync']
     } else if $size < 4 {
