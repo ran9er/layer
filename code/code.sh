@@ -1,4 +1,10 @@
 if [ -n "$CODE_SERVER_WORKDIR" ]; then
+
+    if [ -n "$CODE_SERVER_TAR_ZST" ]; then
+        curl -sSL ${CODE_SERVER_TAR_ZST} | zstd -d | tar xf - -C /opt
+    fi
+
+
     if [ -n "$CODE_SERVER_CONFIG_URL" ]; then
         curl -sSL ${CODE_SERVER_CONFIG_URL} -o /opt/code-server/user-data/User/settings.json
     fi
