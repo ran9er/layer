@@ -272,7 +272,8 @@ RUN set -eux \
   ;
 
 # code-server
-COPY code /opt/code-server
+COPY code/code.sh /opt/code-server/code.sh
+COPY code/settings.json /opt/code-server/user-data/Machine/settings.json
 RUN set -eux \
   ; mkdir -p /opt/code-server/extensions \
   ; mkdir -p /opt/code-server/user-data \
@@ -304,6 +305,7 @@ RUN set -eux \
   ; rm -rf /opt/code-server/user-data \
   ; mkdir -p /opt/code-server/user-data/Machine \
   ; mkdir -p /opt/code-server/user-data/User \
+  ; tar -C /opt -cf - code-server | zstd -T0 -19 > $TARGET/code-server.tar.zst \
   ;
 
 
