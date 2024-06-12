@@ -1,4 +1,4 @@
-FROM fj0rd/0x:or
+FROM ghcr.io/fj0r/0x:or
 
 RUN set -eux \
   ; curl layer.xinminghui.com/setup.sh | sh -s china \

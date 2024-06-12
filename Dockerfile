@@ -1,8 +1,8 @@
-FROM fj0rd/scratch:dropbear as dropbear
-FROM fj0rd/scratch:dog as dog
-FROM fj0rd/scratch:tera-cli as tera
+FROM ghcr.io/fj0r/scratch:dropbear as dropbear
+FROM ghcr.io/fj0r/scratch:dog as dog
+FROM ghcr.io/fj0r/scratch:tera-cli as tera
 
-FROM fj0rd/0x:php8 as php
+FROM ghcr.io/fj0r/0x:php8 as php
 ENV LS_ROOT=/opt/language-server
 RUN set -eux \
   ; mkdir -p ${LS_ROOT}/phpactor \
@@ -310,13 +310,13 @@ RUN set -eux \
 
 
 #------
-FROM fj0rd/scratch:zstd as zstd
-FROM fj0rd/0x:openresty as openresty
+FROM ghcr.io/fj0r/scratch:zstd as zstd
+FROM ghcr.io/fj0r/0x:openresty as openresty
 RUN set -eux \
   ; mkdir -p /target \
   ; tar -C /usr/local -cf - openresty | zstd -T0 -19 > /target/openresty.tar.zst
 
-FROM fj0rd/0x:or
+FROM ghcr.io/fj0r/0x:or
 COPY --from=zstd /usr/local/bin/zstd /srv
 COPY --from=build /target /srv
 COPY --from=openresty /target /srv
