@@ -1,5 +1,4 @@
 FROM ghcr.io/fj0r/scratch:dropbear as dropbear
-FROM ghcr.io/fj0r/scratch:dog as dog
 FROM ghcr.io/fj0r/scratch:tera-cli as tera
 
 FROM ghcr.io/fj0r/0x:php8 as php
@@ -148,7 +147,6 @@ RUN set -eux \
 
 
 # utils
-COPY --from=dog /usr/local/bin/dog $UTILS_ROOT/dog
 COPY --from=tera /usr/local/bin/tera $UTILS_ROOT/tera
 RUN set -eux \
   ; rg_ver=$(curl --retry 3 -sSL https://api.github.com/repos/BurntSushi/ripgrep/releases/latest | jq -r '.tag_name') \
