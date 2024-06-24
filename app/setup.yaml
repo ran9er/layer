@@ -20,7 +20,7 @@ manifest:
   tag: [config, config_only]
   belong: nu
   source: nushell.conf
-  target: '${CONFIG_ROOT}/nushell'
+  target: '$(nu -c "$nu.default-config-dir")'
 - name: zellij
   alias: [zj]
   source: zellij
@@ -40,7 +40,7 @@ manifest:
   tag: [config, config_only]
   belong: nvim
   source: nvim.conf
-  target: '${CONFIG_ROOT}/nvim'
+  target: "$(nvim --headless '+echo stdpath(\"config\")' +qa -u NORC 2>&1)"
 - name: wasm
   alias: [wasmtime]
   source: wasmtime
