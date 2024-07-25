@@ -20,7 +20,7 @@ manifest:
   tag: [config, config_only]
   belong: nu
   source: nushell.conf
-  target: '$(nu -c "$nu.default-config-dir")'
+  target: "$(nu -c '$nu.default-config-dir')"
 - name: zellij
   alias: [zj]
   source: zellij
