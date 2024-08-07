@@ -121,10 +121,10 @@ def setup(taget, tags):
         for i in requires:
             if not i in lst:
                 lst.append(i)
-        for i in components:
+        for i in target:
             if not i in lst:
                 lst.append(i)
-        for i in target:
+        for i in components:
             if not i in lst:
                 lst.append(i)
     for i in lst:
