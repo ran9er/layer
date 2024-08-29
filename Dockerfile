@@ -1,5 +1,4 @@
 FROM ghcr.io/fj0r/scratch:dropbear as dropbear
-FROM ghcr.io/fj0r/scratch:tera-cli as tera
 
 FROM ghcr.io/fj0r/0x:php8 as php
 ENV LS_ROOT=/opt/language-server
@@ -147,7 +146,6 @@ RUN set -eux \
 
 
 # utils
-COPY --from=tera /usr/local/bin/tera $UTILS_ROOT/tera
 RUN set -eux \
   ; rg_ver=$(curl --retry 3 -sSL https://api.github.com/repos/BurntSushi/ripgrep/releases/latest | jq -r '.tag_name') \
   ; rg_url="https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep-${rg_ver}-x86_64-unknown-linux-musl.tar.gz" \
