@@ -58,7 +58,7 @@ RUN set -eux \
   ;
 
 # python
-ARG PYTHON_VERSION=3.12
+ARG PYTHON_VERSION=3.13
 ARG COMMITMSG
 RUN set -x \
   ; py_build=$(curl --retry 3 -sSL https://api.github.com/repos/indygreg/python-build-standalone/releases | jq -r '[.[]|select(.prerelease == false)][0].tag_name') \
