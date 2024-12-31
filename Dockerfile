@@ -19,6 +19,7 @@ ENV NODE_ROOT=/opt/node
 ENV NVIM_ROOT=/opt/nvim
 #ENV NVIM_MUSL=1
 ENV NU_ROOT=/opt/nushell
+ENV ZJ_ROOT=/opt/zellij
 ENV UTILS_ROOT=/opt/utils
 ENV LS_ROOT=/opt/language-server
 ENV SSHD_ROOT=/opt/dropbear
@@ -50,6 +51,7 @@ RUN set -eux \
   ; mkdir -p $UTILS_ROOT \
   ; mkdir -p $LS_ROOT \
   ; mkdir -p $NU_ROOT \
+  ; mkdir -p $ZJ_ROOT \
   ; mkdir -p $SSHD_ROOT \
   ; mkdir -p $WASM_ROOT \
   ; mkdir -p $SPIN_ROOT \
@@ -144,6 +146,16 @@ RUN set -eux \
   ; tar -C ${HOME}/.config -cf - nushell | zstd -T0 -19 > $TARGET/nushell.conf.tar.zst \
   ;
 
+# zellij
+RUN set -eux \
+  ; zj_ver=$(curl --retry 3 -sSL https://api.github.com/repos/zellij-org/zellij/releases/latest | jq -r '.tag_name') \
+  ; zj_url="https://github.com/zellij-org/zellij/releases/download/${zj_ver}/zellij-x86_64-unknown-linux-musl.tar.gz" \
+  ; curl --retry 3 -sSL ${zj_url} | tar zxf - -C $ZJ_ROOT \
+  ; tar -C $(dirname $ZJ_ROOT) -cf - $(basename $ZJ_ROOT) | zstd -T0 -19 > $TARGET/zellij.tar.zst \
+  ; git clone --depth=3 https://github.com/fj0r/zellij.git ${HOME}/.config/zellij \
+  ; opwd=$PWD; cd ${HOME}/.config/zellij; git log -1 --date=iso; cd $opwd \
+  ; tar -C ${HOME}/.config -cf - zellij | zstd -T0 -19 > $TARGET/zellij.conf.tar.zst \
+  ;
 
 # utils
 RUN set -eux \
@@ -153,19 +165,11 @@ RUN set -eux \
   \
   ; fd_ver=$(curl --retry 3 -sSL https://api.github.com/repos/sharkdp/fd/releases/latest | jq -r '.tag_name') \
   ; fd_url="https://github.com/sharkdp/fd/releases/latest/download/fd-${fd_ver}-x86_64-unknown-linux-musl.tar.gz" \
-  ; curl --retry 3 -sSL ${fd_url} | tar zxf - -C /usr/local/bin --strip-components=1 --wildcards '*/fd' \
+  ; curl --retry 3 -sSL ${fd_url} | tar zxf - -C $UTILS_ROOT --strip-components=1 --wildcards '*/fd' \
   \
   ; echo "download yq in $(pwd)" \
   ; yq_url="https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64.tar.gz" \
   ; curl --retry 3 -sSL ${yq_url} | tar zxf - ./yq_linux_amd64 && mv yq_linux_amd64 $UTILS_ROOT/yq \
-  \
-  #; dasel_url="https://github.com/TomWright/dasel/releases/latest/download/dasel_linux_amd64.gz" \
-  #; curl --retry 3 -sSL ${dasel_url} | gzip -d > $UTILS_ROOT/dasel && chmod +x $UTILS_ROOT/dasel \
-  \
-  ; sd_ver=$(curl --retry 3 -sSL https://api.github.com/repos/chmln/sd/releases/latest | jq -r '.tag_name') \
-  ; echo "download sd ${sd_ver} in $(pwd)" \
-  ; sd_url="https://github.com/chmln/sd/releases/latest/download/sd-${sd_ver}-x86_64-unknown-linux-musl" \
-  ; curl --retry 3 -sSL ${sd_url} -o $UTILS_ROOT/sd && chmod +x $UTILS_ROOT/sd \
   \
   ; just_ver=$(curl --retry 3 -sSL https://api.github.com/repos/casey/just/releases/latest | jq -r '.tag_name') \
   ; just_url="https://github.com/casey/just/releases/latest/download/just-${just_ver}-x86_64-unknown-linux-musl.tar.gz" \
