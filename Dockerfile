@@ -198,7 +198,8 @@ RUN set -eux \
 RUN set -eux \
   #; nvim_url=$(curl --retry 3 -sSL https://api.github.com/repos/neovim/neovim/releases -H 'Accept: application/vnd.github.v3+json' \
   #           | jq -r '[.[]|select(.prerelease==false)][0].assets[].browser_download_url' | grep -v sha256sum | grep linux64.tar.gz) \
-  ; nvim_url="https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz" \
+  ; nvim_ver=$(curl --retry 3 -sSL https://api.github.com/repos/neovim/neovim/releases/latest | jq -r '.tag_name') \
+  ; nvim_url="https://github.com/neovim/neovim/releases/download/${nvim_ver}/nvim-linux-x86_64.tar.gz" \
   ; curl --retry 3 -sSL ${nvim_url} | tar zxf - -C $NVIM_ROOT --strip-components=1 \
   \
   ; rg_ver=$(curl --retry 3 -sSL https://api.github.com/repos/BurntSushi/ripgrep/releases/latest | jq -r '.tag_name') \
