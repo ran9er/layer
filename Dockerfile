@@ -43,7 +43,9 @@ RUN set -eux \
         jq ripgrep git build-essential cmake \
         musl-dev musl-tools \
   ; ln -s /usr/bin/g++ /usr/bin/musl-g++ \
-  ; apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* \
+  ; apt-get autoremove -y \
+  ; apt-get clean -y \
+  ; rm -rf /var/lib/apt/lists/* \
   \
   ; mkdir -p ${TARGET} \
   ; mkdir -p $NVIM_ROOT \
@@ -131,7 +133,8 @@ COPY --from=php /opt/lsphp.tar.zst $TARGET
 RUN set -eux \
   ; git clone --depth=1 https://github.com/xdebug/vscode-php-debug.git $LS_ROOT/vscode-php-debug \
   ; cd $LS_ROOT/vscode-php-debug \
-  ; npm install && npm run build \
+  ; npm install \
+  ; npm run build \
   ; tar -C $LS_ROOT -cf - vscode-php-debug | zstd -T0 -19 > $TARGET/phpdb.tar.zst \
   ;
 
@@ -169,7 +172,8 @@ RUN set -eux \
   \
   ; echo "download yq in $(pwd)" \
   ; yq_url="https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64.tar.gz" \
-  ; curl --retry 3 -sSL ${yq_url} | tar zxf - ./yq_linux_amd64 && mv yq_linux_amd64 $UTILS_ROOT/yq \
+  ; curl --retry 3 -sSL ${yq_url} | tar zxf - ./yq_linux_amd64 \
+  ; mv yq_linux_amd64 $UTILS_ROOT/yq \
   \
   ; btm_url="https://github.com/ClementTsang/bottom/releases/latest/download/bottom_x86_64-unknown-linux-musl.tar.gz" \
   ; curl --retry 3 -sSL ${btm_url} | tar zxf - -C $UTILS_ROOT btm \
