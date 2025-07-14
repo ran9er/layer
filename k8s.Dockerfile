@@ -1,4 +1,4 @@
-FROM ghcr.io/fj0r/0x:ci as build
+FROM ghcr.io/fj0r/0x:ci AS build
 COPY k8s /opt/k8s
 
 WORKDIR /opt/k8s

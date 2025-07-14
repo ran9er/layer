@@ -1,6 +1,6 @@
-FROM ghcr.io/fj0r/io:__dropbear__ as dropbear
+FROM ghcr.io/fj0r/io:__dropbear__ AS dropbear
 
-FROM ghcr.io/fj0r/0x:php8 as php
+FROM ghcr.io/fj0r/0x:php8 AS php
 ENV LS_ROOT=/opt/language-server
 RUN set -eux \
   ; mkdir -p ${LS_ROOT}/phpactor \
@@ -12,7 +12,7 @@ RUN set -eux \
   ; tar -C ${LS_ROOT} -cf - phpactor | zstd -T0 -19 > /opt/lsphp.tar.zst \
   ;
 
-FROM debian:bookworm-slim as build
+FROM debian:bookworm-slim AS build
 
 ENV TARGET=/target
 ENV NODE_ROOT=/opt/node
@@ -307,8 +307,8 @@ RUN set -eux \
 
 
 #------
-FROM ghcr.io/fj0r/scratch:zstd as zstd
-FROM ghcr.io/fj0r/0x:openresty as openresty
+FROM ghcr.io/fj0r/scratch:zstd AS zstd
+FROM ghcr.io/fj0r/0x:openresty AS openresty
 RUN set -eux \
   ; mkdir -p /target \
   ; tar -C /usr/local -cf - openresty | zstd -T0 -19 > /target/openresty.tar.zst

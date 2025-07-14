@@ -1,4 +1,4 @@
-FROM ghcr.io/fj0r/io:base as build
+FROM ghcr.io/fj0r/io:base AS build
 RUN set -eux \
   ; commit_id=$(curl -sSL https://github.com/microsoft/vscode/tags \
     | r '<a.*href="/microsoft/vscode/commit/(.+)">' -or '$1' | head -n 1) \
