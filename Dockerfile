@@ -259,14 +259,14 @@ RUN set -eux \
   ;
 
 # vector
-RUN set -eux \
-  ; mkdir -p /opt/vector \
-  ; vector_ver=$(curl --retry 3 -sSL https://api.github.com/repos/vectordotdev/vector/releases/latest | jq -r '.tag_name' | cut -c 2-) \
-  ; vector_url="https://github.com/vectordotdev/vector/releases/latest/download/vector-${vector_ver}-x86_64-unknown-linux-musl.tar.gz" \
-  ; curl --retry 3 -sSL ${vector_url} | tar -zxf - -C /opt/vector --strip-components=3 ./vector-x86_64-unknown-linux-musl/bin/vector \
-  ; chmod +x /opt/vector/vector \
-  ; tar -C /opt -cf - vector | zstd -T0 -19 > $TARGET/vector.tar.zst \
-  ;
+# RUN set -eux \
+#   ; mkdir -p /opt/vector \
+#   ; vector_ver=$(curl --retry 3 -sSL https://api.github.com/repos/vectordotdev/vector/releases | jq -r '.tag_name' | cut -c 2-) \
+#   ; vector_url="https://github.com/vectordotdev/vector/releases/latest/download/vector-${vector_ver}-x86_64-unknown-linux-musl.tar.gz" \
+#   ; curl --retry 3 -sSL ${vector_url} | tar -zxf - -C /opt/vector --strip-components=3 ./vector-x86_64-unknown-linux-musl/bin/vector \
+#   ; chmod +x /opt/vector/vector \
+#   ; tar -C /opt -cf - vector | zstd -T0 -19 > $TARGET/vector.tar.zst \
+#   ;
 
 # code-server
 # COPY code/code.sh /opt/code-server/code.sh
