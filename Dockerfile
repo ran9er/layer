@@ -119,13 +119,6 @@ RUN set -eux \
   ; mkdir -p $LS_ROOT/lua-language-server \
   ; curl --retry 3 -sSL ${lslua_url} | tar zxf - -C $LS_ROOT/lua-language-server \
   ; tar -C $LS_ROOT -cf - lua-language-server | zstd -T0 -19 > $TARGET/lslua.tar.zst \
-  \
-  # lsnode
-  ; git clone --depth=1 https://github.com/microsoft/vscode-node-debug2.git $LS_ROOT/vscode-node-debug2 \
-  ; cd $LS_ROOT/vscode-node-debug2 \
-  ; npm install \
-  ; NODE_OPTIONS=--no-experimental-fetch npm run build \
-  ; tar -C $LS_ROOT -cf - vscode-node-debug2 | zstd -T0 -19 > $TARGET/lsnode.tar.zst \
   ;
 
 # php
